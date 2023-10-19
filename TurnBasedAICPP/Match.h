@@ -4,10 +4,9 @@
 
 class Match
 {
-public:
-	Match();
-	void UpdateState(const Action& action);
-private:
-	const Simulator m_simulator;
-	const std::vector<Action> m_actions;
+//public:
+	//void UpdateState(const Action& action);
+//private:
+	//const Simulator m_simulator;
+	//const std::vector<Action> m_actions;
 };

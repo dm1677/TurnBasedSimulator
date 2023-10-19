@@ -87,8 +87,11 @@ std::vector<Unit> readUnitsFromFile(const std::string& filename) {
 
 int main()
 {
-	Match match;
-	match.UpdateState(Action(Prawn, 1, 1));
+	//Match match;
+	//match.UpdateState(Action(Prawn, 1, 1));
+
+	std::cout << "Test\n";
+
 	/*GameState state;
 	state.DrawGrid();
 
