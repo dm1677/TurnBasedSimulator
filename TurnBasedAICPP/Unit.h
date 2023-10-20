@@ -23,11 +23,11 @@ public:
 	Direction GetDirection() const;
 	static Direction GetDirection(UnitType unit_type);
 
-	int GetSpeed() const;
-	static int GetSpeed(UnitType unit_type);
+	unsigned char GetSpeed() const;
+	static unsigned char GetSpeed(UnitType unit_type);
 
-	int GetMaxHealth() const;
-	static int GetMaxHealth(UnitType unit_type);
+	unsigned char GetMaxHealth() const;
+	static unsigned char GetMaxHealth(UnitType unit_type);
 
 	unsigned char GetDamage() const;
 	static unsigned char GetDamage(UnitType unit_type);

@@ -95,7 +95,7 @@ Direction Unit::GetDirection() const {
 	}
 }
 
-int Unit::GetSpeed() const {
+unsigned char Unit::GetSpeed() const {
 	switch (m_UnitType) {
 	case (int)Prawn:
 		return 2;
@@ -116,7 +116,7 @@ int Unit::GetSpeed() const {
 	}
 }
 
-int Unit::GetSpeed(UnitType unit_type) {
+unsigned char Unit::GetSpeed(UnitType unit_type) {
 	switch (unit_type) {
 	case (int)Prawn:
 		return 2;
@@ -137,7 +137,7 @@ int Unit::GetSpeed(UnitType unit_type) {
 	}
 }
 
-int Unit::GetMaxHealth() const{
+unsigned char Unit::GetMaxHealth() const{
 	switch (m_UnitType) {
 	case (int)Prawn:
 		return 13;
@@ -158,7 +158,7 @@ int Unit::GetMaxHealth() const{
 	}
 }
 
-int Unit::GetMaxHealth(UnitType unitType) {
+unsigned char Unit::GetMaxHealth(UnitType unitType) {
 	switch (unitType) {
 	case (int)Prawn:
 		return 13;

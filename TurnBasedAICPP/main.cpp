@@ -5,8 +5,6 @@
 #include <chrono>
 #include <ctime>
 
-#include <fstream>
-
 void CountMoves(GameState state)
 {
 	auto moves = state.GetLegalMoves();
@@ -37,8 +35,12 @@ void ExecuteAndRenderAction(Simulator simulator, const Action& action)
 int main()
 {
 	Match match;
+	
 	match.UpdateState(Action(Prawn, 7, 7));
-
+	match.UpdateState(Action(Prawn, 1, 1));
+	match.UpdateState(Action(4, 1, 0));
+	match.UpdateState(Action(Gobbo, 3, 3));
+	match.UpdateState(Action(14, 7, 6));
 
 	/*GameState state;
 	state.DrawGrid();

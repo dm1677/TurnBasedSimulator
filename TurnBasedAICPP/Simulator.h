@@ -17,8 +17,8 @@ private:
 	Action m_Action;
 	std::vector<Unit> m_Units;
 
-	void executeMoveAction();
-	void executeAttackAction();
-	void executeCreateAction();
+	bool executeMoveAction();
+	bool executeAttackAction();
+	bool executeCreateAction();
 };
 

@@ -239,7 +239,7 @@ void GameState::createUnits()
 	m_Units.push_back(c);
 	m_Units.push_back(d);
 
-	std::vector<std::pair<int, int>> vectors = { { 7, 0 }, { 0, 7 }, { 14, 7 }, { 7, 14 }, { 6,6 }, { 8,8 }, { 6,8 }, { 8,6 } };
+	std::vector<std::pair<unsigned char, unsigned char>> vectors = { { 7, 0 }, { 0, 7 }, { 14, 7 }, { 7, 14 }, { 6,6 }, { 8,8 }, { 6,8 }, { 8,6 } };
 
 	for (auto pair : vectors) {
 		Unit u(pair.first, pair.second, 0, (int)Tree, (int)Neutral);
