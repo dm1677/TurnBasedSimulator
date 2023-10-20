@@ -186,7 +186,8 @@ bool GameState::IsInBounds(int x, int y)
 	else return true;
 }
 
-void GameState::PrintUnits() {
+void GameState::PrintUnits() const
+{
 	for (auto unit : m_Units)
 	{
 		unit.Print();
@@ -194,7 +195,8 @@ void GameState::PrintUnits() {
 	}
 }
 
-void GameState::DrawGrid() {
+void GameState::DrawGrid() const
+{
 	char grid[15][15];
 
 	std::cout << std::endl;

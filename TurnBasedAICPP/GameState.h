@@ -28,8 +28,8 @@ public:
 	std::vector<std::pair<unsigned char, unsigned char>> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit) const;
 
-	void PrintUnits();
-	void DrawGrid();
+	void PrintUnits() const;
+	void DrawGrid() const;
 
 	std::vector<Unit> GetUnitData() const { return m_Units; }
 private:

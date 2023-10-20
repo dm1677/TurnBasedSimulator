@@ -34,46 +34,24 @@ void ExecuteAndRenderAction(Simulator simulator, const Action& action)
 
 int main()
 {
-	Match match;
-
-	for (int i = 0; i < 10; i++) {
-		auto state = match.GetCurrentGameState();
-		RandomAI randomAI(state);
-		auto action = randomAI.GetAction();
-		match.UpdateState(action);
-	}
-
-
-	//auto action = randomAI.GetAction();
-	//auto action = Action(Prawn, 2, 2);
-	//match.UpdateState(action);
-
-	/*
-	match.UpdateState(Action(Prawn, 7, 7));
-	match.UpdateState(Action(Prawn, 1, 1));
-	match.UpdateState(Action(Gobbo, 3, 3));
-	match.UpdateState(Action(Gobbo, 4, 4));
-
-	match.CreateReplayFile();*/
-
-	//match.PlayReplayFromFile("replay.tbr");
-
-	system("pause>0");
-}
-
-/*
-void foo(GameState state, Action action)
-{
-	auto ai = new AI(&state, action);
+	int matchCount = 1;
+	int movesPerMatch = 400;
 
 	auto start = std::chrono::system_clock::now();
-	ai->get_move();
+	for (int j = 0; j < matchCount; j++) {
+		Match match;
+		for (int i = 0; i < movesPerMatch; i++) {
+			auto state = match.GetCurrentGameState();
+			RandomAI randomAI(state);
+			auto action = randomAI.GetAction();
+			match.UpdateState(action);
+			match.DrawCurrentState();
+		}
+	}
 	auto end = std::chrono::system_clock::now();
 
 	std::chrono::duration<double> elapsed_seconds = end - start;
-	std::time_t end_time = std::chrono::system_clock::to_time_t(end);
-
 	std::cout << "\n\n\nElapsed time: " << elapsed_seconds.count() << "s\n";
 
-	delete ai;
-}*/
+	system("pause>0");
+}
