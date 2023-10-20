@@ -1,6 +1,6 @@
 #pragma once
-#include "Unit.h"
-#include "Action.h"
+#include "GameSimulator/Unit.h"
+#include "GameSimulator/Action.h"
 #include <string>
 #include <vector>
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "AI.h"
+#include "../GameSimulator/GameState.h"
 
 class RandomAI :
     public AI

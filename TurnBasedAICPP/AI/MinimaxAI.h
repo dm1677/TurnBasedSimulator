@@ -1,5 +1,6 @@
 #pragma once
-#include "GameState.h"
+#include "../GameSimulator/GameState.h"
+#include "../GameSimulator/Action.h"
 #include <iostream>
 #include <vector>
 

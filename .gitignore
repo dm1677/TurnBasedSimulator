@@ -1,9 +1,8 @@
 .vs/
 Debug/
-TurnBasedAICPP/replay.tbr
-TurnBasedAICPP/Debug/
-TurnBasedAICPP/0
-TurnbasedAICPP/unit.txt
-TurnbasedAICPP/units.bin
 TurnBasedAICPP.sln
+TurnBasedAICPP/output
+TurnBasedAICPP/Debug/
 TurnBasedAICPP/TurnBasedAICPP.vcxproj
+TurnBasedAICPP/TurnBasedAICPP.vcxproj.user
+TurnBasedAICPP/TurnBasedAICPP.vcxproj.filters

@@ -1,6 +1,5 @@
 #pragma once
-#include "Action.h"
-#include "GameState.h"
+#include "../GameSimulator/Action.h"
 
 class AI
 {

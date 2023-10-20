@@ -151,27 +151,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AI.cpp" />
-    <ClCompile Include="MinimaxAI.cpp" />
-    <ClCompile Include="GameState.cpp" />
+    <ClCompile Include="AI\AI.cpp" />
+    <ClCompile Include="AI\MinimaxAI.cpp" />
+    <ClCompile Include="GameSimulator\GameState.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Match.cpp" />
-    <ClCompile Include="RandomAI.cpp" />
+    <ClCompile Include="GameSimulator\Match.cpp" />
+    <ClCompile Include="AI\RandomAI.cpp" />
     <ClCompile Include="Serialiser.cpp" />
-    <ClCompile Include="Simulator.cpp" />
-    <ClCompile Include="Unit.cpp" />
+    <ClCompile Include="GameSimulator\Simulator.cpp" />
+    <ClCompile Include="GameSimulator\Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Action.h" />
-    <ClInclude Include="AI.h" />
-    <ClInclude Include="MinimaxAI.h" />
+    <ClInclude Include="GameSimulator\Action.h" />
+    <ClInclude Include="AI\AI.h" />
+    <ClInclude Include="AI\MinimaxAI.h" />
     <ClInclude Include="Enums.h" />
-    <ClInclude Include="GameState.h" />
-    <ClInclude Include="Match.h" />
-    <ClInclude Include="RandomAI.h" />
+    <ClInclude Include="GameSimulator\GameState.h" />
+    <ClInclude Include="GameSimulator\Match.h" />
+    <ClInclude Include="AI\RandomAI.h" />
     <ClInclude Include="Serialiser.h" />
-    <ClInclude Include="Simulator.h" />
-    <ClInclude Include="Unit.h" />
+    <ClInclude Include="GameSimulator\Simulator.h" />
+    <ClInclude Include="GameSimulator\Unit.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

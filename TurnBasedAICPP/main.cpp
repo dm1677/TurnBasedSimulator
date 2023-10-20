@@ -1,7 +1,7 @@
 #include <iostream>
-#include "GameState.h"
-#include "RandomAI.h"
-#include "Match.h"
+#include "GameSimulator/GameState.h"
+#include "AI/RandomAI.h"
+#include "GameSimulator/Match.h"
 #include <chrono>
 #include <ctime>
 
