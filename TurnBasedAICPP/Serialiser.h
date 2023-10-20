@@ -12,6 +12,8 @@ public:
 	void WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const;
 	std::vector<Unit> ReadUnitsFromBinaryFile(const std::string& filename) const;
 	void WriteReplayToFile(const std::vector<Action>& actions, const std::string& filename) const;
+	std::vector<Action>* ReadReplayFile(const std::string& filename) const;
 private:
 	std::string getActionData(const Action& action, unsigned char owner) const;
+	Action deserialiseAction(const std::vector<std::string>& actionData) const;
 };

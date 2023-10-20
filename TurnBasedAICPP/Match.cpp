@@ -17,3 +17,18 @@ void Match::CreateReplayFile() const
 		serialiser.WriteReplayToFile(m_Actions, "replay.tbr");
 	}
 }
+
+void Match::PlayReplayFromFile(const std::string& filename)
+{
+	if (m_Actions.empty())
+	{
+		Serialiser serialiser;
+		auto actions = serialiser.ReadReplayFile(filename);
+		if (actions == nullptr) return;
+		for (const Action& action : *actions)
+		{
+			UpdateState(action);
+		}
+		delete actions;
+	}
+}
