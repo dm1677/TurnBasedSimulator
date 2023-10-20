@@ -32,7 +32,7 @@ User GameState::GetEnemy() const {
 	if (m_PlayerToMove == Enemy) { return Player; }
 }
 
-std::vector<Action> GameState::GetLegalMoves() {
+std::vector<Action> GameState::GetLegalMoves() const {
 
 	std::vector<Action> moves;
 	unsigned char money = GetMoney(m_PlayerToMove);
@@ -122,7 +122,7 @@ std::vector<std::pair<unsigned char, unsigned char>> GameState::GetMovement(cons
 	return moves;
 }
 
-std::vector<int> GameState::GetAttacks(const Unit &unit) {
+std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
 	std::vector<int> enemy_m_Units;
 	std::vector<int> attack_actions;
@@ -250,4 +250,23 @@ void GameState::createUnits()
 unsigned char GameState::GetMoney(User user) const
 {
 	return (user == (User)m_Units[0].GetOwner()) ? m_Units[0].GetHealth() : m_Units[1].GetHealth();
+}
+
+void GameState::GetMoveCounts() const
+{
+	auto moves = GetLegalMoves();
+	std::cout << "Total actions: " << "\n\n" << moves.size();
+
+	int attack = 0;
+	int move = 0;
+	int create = 0;
+
+	for (auto const& possibleMove : moves) {
+		if (possibleMove.GetActionType() == Attack) { attack++; }
+		if (possibleMove.GetActionType() == Create) { create++; }
+		if (possibleMove.GetActionType() == Move) { move++; }
+	}
+
+	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create;
+	std::cout << "\nMoney: " << GetMoney(GetPlayer()) << std::endl;
 }

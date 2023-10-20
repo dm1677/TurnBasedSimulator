@@ -24,10 +24,11 @@ public:
 	bool IsGameOver();
 	int GetResult();
 
-	std::vector<Action> GetLegalMoves();
+	std::vector<Action> GetLegalMoves() const;
 	std::vector<std::pair<unsigned char, unsigned char>> GetMovement(const Unit &unit) const;
-	std::vector<int> GetAttacks(const Unit &unit);
+	std::vector<int> GetAttacks(const Unit &unit) const;
 
+	void GetMoveCounts() const;
 	void PrintUnits();
 	void DrawGrid();
 
