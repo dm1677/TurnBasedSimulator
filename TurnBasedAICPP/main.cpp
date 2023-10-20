@@ -42,26 +42,7 @@ int main()
 	match.UpdateState(Action(Gobbo, 3, 3));
 	match.UpdateState(Action(14, 7, 6));
 
-	/*GameState state;
-	state.DrawGrid();
-
-	CountMoves(state);
-	Action action(Prawn, 7, 7);
-	Simulator simulator(state, action);
-	auto newState = simulator.GenerateNewState(action);
-	newState.print_units();
-
-	std::cout << "\n\n\n\n________________\n\n\n\n\n";
-
-
-	writeUnitsToFile(simulator.GetCurrentState().GetUnitData(), "units.bin");
-	auto u = readUnitsFromFile("units.bin");
-	for (auto uu : u)
-	{
-		uu.print();
-		std::cout << std::endl;
-		
-	}*/
+	match.CreateReplayFile();
 
 	system("pause>0");
 }

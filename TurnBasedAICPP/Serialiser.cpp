@@ -78,3 +78,56 @@ std::vector<Unit> Serialiser::ReadUnitsFromBinaryFile(const std::string& filenam
 	inFile.close();
 	return units;
 }
+
+void Serialiser::WriteReplayToFile(const std::vector<Action>& actions, const std::string& filename) const
+{
+	std::ofstream file;
+	file.open(filename);
+
+	unsigned char owner = 1;
+	for (const Action& action : actions)
+	{
+		owner = (owner == 0) ? 1 : 0;
+		file << ";" << std::endl;
+		file << getActionData(action, owner);
+	}
+	file << "\n;";
+	file.close();
+}
+
+std::string Serialiser::getActionData(const Action& action, unsigned char owner) const
+{
+	std::string string = "";
+	switch (action.GetActionType())
+	{
+	case Create:
+		string += "CreateAction\n";
+		string += std::to_string(action.GetX());
+		string += "\n";
+		string += std::to_string(action.GetY());
+		string += "\n";
+		string += std::to_string(action.GetUnitType());
+		string += "\n";
+		string += std::to_string(owner);
+		string += "\n";
+		string += std::to_string(owner + 9);
+		string += "\n";
+		break;
+	case Move:
+		string += "MoveAction\n";
+		string += std::to_string(action.GetUnit1());
+		string += "\n";
+		string += std::to_string(action.GetX());
+		string += "\n";
+		string += std::to_string(action.GetY());
+		break;
+	case Attack:
+		string += "AttackAction\n";
+		string += "\n";
+		string += std::to_string(action.GetUnit1());
+		string += "\n";
+		string += std::to_string(action.GetUnit2());
+		break;
+	}
+	return string;
+}

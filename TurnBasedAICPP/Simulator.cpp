@@ -2,6 +2,7 @@
 
 GameState Simulator::GenerateNewState(const Action& action)
 {
+	if (m_State.IsGameOver()) return m_State;
 	m_Action = action;
 	bool success;
 	switch (m_Action.GetActionType())
