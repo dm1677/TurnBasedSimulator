@@ -26,69 +26,18 @@ void CountMoves(GameState state)
 	std::cout << "\nMoney: " << state.GetMoney(state.GetPlayer()) << std::endl;
 }
 
-void ExecuteAndRenderAction(Simulator simulator, Action action)
+void ExecuteAndRenderAction(Simulator simulator, const Action& action)
 {
 	simulator.GenerateNewState(action);
 	simulator.GetCurrentState().DrawGrid();
 	CountMoves(simulator.GetCurrentState());
 }
 
-void writeUnitsToFile(const std::vector<Unit>& units, const std::string& filename) {
-	std::ofstream outFile(filename, std::ios::binary);
-
-	if (!outFile.is_open()) {
-		// Handle file opening error
-		return;
-	}
-
-	for (const Unit& unit : units) {
-		uint32_t packedData = 0;
-
-		packedData |= (unit.GetX() & 0x0F);
-		packedData |= ((unit.GetY() & 0x0F) << 4);
-		packedData |= ((unit.GetHealth() & 0xFF) << 8);
-		packedData |= ((unit.GetUnitType() & 0x07) << 16);
-		packedData |= ((unit.GetOwner() & 0x03) << 19);
-
-		outFile.write(reinterpret_cast<char*>(&packedData), sizeof(packedData));
-	}
-
-	outFile.close();
-}
-
-std::vector<Unit> readUnitsFromFile(const std::string& filename) {
-	std::vector<Unit> units;
-	std::ifstream inFile(filename, std::ios::binary);
-
-	if (!inFile.is_open()) {
-		// Handle file opening error
-		return units; // Return an empty vector
-	}
-
-	while (inFile.peek() != EOF) {
-		uint32_t packedData;
-		inFile.read(reinterpret_cast<char*>(&packedData), sizeof(packedData));
-
-		Unit unit(
-			packedData & 0x0F,
-			(packedData >> 4) & 0x0F,
-			(packedData >> 8) & 0xFF,
-			(packedData >> 16) & 0x07,
-			(packedData >> 19) & 0x03
-		);
-
-		units.push_back(unit);
-	}
-
-	inFile.close();
-	return units;
-}
-
 
 int main()
 {
 	Match match;
-	match.UpdateState(Action(Prawn, 0, 1));
+	match.UpdateState(Action(Prawn, 7, 7));
 
 
 	/*GameState state;

@@ -13,35 +13,11 @@ bool Unit::TakeDamage(unsigned char damage)
 	return false;
 }
 
-void Unit::Print() {
+void Unit::Print() const {
 	std::cout << "Position: " << (int)m_X << ", " << (int)m_Y << std::endl;
 	std::cout << "Health: " << (int)m_Health << std::endl;
 	std::cout << "Unit type: " << (UnitType)m_UnitType << std::endl;
 	std::cout << "Owner: " << (User)m_Owner << std::endl;
-}
-
-void Unit::Write() {
-	std::ofstream file;
-	file.open("unit.txt");
-
-	file << "Position: " << (int)m_X << ", " << (int)m_Y << std::endl;
-	file << "Health: " << (int)m_Health << std::endl;
-	file << "Unit type: " << m_UnitType << std::endl;
-	file << "Owner: " << m_Owner;
-
-	file.close();
-}
-
-void Unit::Read() {
-	std::ifstream file("unit.txt");
-	std::string text;
-
-	while (getline(file, text))
-	{
-		std::cout << text;
-	}
-
-	file.close();
 }
 
 bool Unit::IsMoveAttacker() const

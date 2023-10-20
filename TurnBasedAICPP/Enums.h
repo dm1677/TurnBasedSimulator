@@ -28,3 +28,8 @@ enum Direction {
 	Diagonal,
 	LineAndDiagonal
 };
+
+enum FileType {
+	Binary,
+	Text
+};

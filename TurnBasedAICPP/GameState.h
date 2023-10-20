@@ -25,7 +25,7 @@ public:
 	int GetResult();
 
 	std::vector<Action> GetLegalMoves();
-	std::vector<std::pair<int, int>> GetMovement(const Unit &unit) const;
+	std::vector<std::pair<unsigned char, unsigned char>> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit);
 
 	void PrintUnits();

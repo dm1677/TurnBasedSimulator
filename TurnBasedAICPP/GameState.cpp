@@ -78,10 +78,10 @@ std::vector<Action> GameState::GetLegalMoves() {
 	return moves;
 }
 
-std::vector<std::pair<int, int>> GameState::GetMovement(const Unit &unit) const
+std::vector<std::pair<unsigned char, unsigned char>> GameState::GetMovement(const Unit &unit) const
 {
 	int speed = unit.GetSpeed();
-	std::vector<std::pair<int, int>> moves;
+	std::vector<std::pair<unsigned char, unsigned char>> moves;
 
 	if (speed == 0) { return moves; }
 

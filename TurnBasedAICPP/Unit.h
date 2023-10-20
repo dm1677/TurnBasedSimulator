@@ -43,9 +43,7 @@ public:
 
 	char GetCharRepresentation() const;
 
-	void Print();
-	void Write();
-	void Read();
+	void Print() const;
 
 private:
 	unsigned char m_X : 4;
