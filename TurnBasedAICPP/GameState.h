@@ -29,8 +29,8 @@ public:
 	std::vector<int> GetAttacks(const Unit &unit) const;
 
 	void GetMoveCounts() const;
-	void PrintUnits();
-	void DrawGrid();
+	void PrintUnits() const;
+	void DrawGrid() const;
 
 	std::vector<Unit> GetUnitData() const { return m_Units; }
 private:

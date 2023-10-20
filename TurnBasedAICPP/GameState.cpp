@@ -45,14 +45,13 @@ std::vector<Action> GameState::GetLegalMoves() const {
 			{
 				if (!IsPassable(x, y)) continue;
 
-				Action action(Gobbo, x, y);
-				moves.push_back(action);
+				moves.emplace_back(Gobbo, x, y);
 				if (money >= 5)
-					moves.push_back({ Prawn, x, y });
+					moves.emplace_back(Prawn, x, y);
 				if (money >= 8)
-					moves.push_back({ Building, x, y });
+					moves.emplace_back( Building, x, y );
 				if (money >= 12)
-					moves.push_back({ Knight, x, y });
+					moves.emplace_back(Knight, x, y );
 			}
 		}
 	}
@@ -187,7 +186,8 @@ bool GameState::IsInBounds(int x, int y)
 	else return true;
 }
 
-void GameState::PrintUnits() {
+void GameState::PrintUnits() const
+{
 	for (auto unit : m_Units)
 	{
 		unit.Print();
@@ -195,7 +195,8 @@ void GameState::PrintUnits() {
 	}
 }
 
-void GameState::DrawGrid() {
+void GameState::DrawGrid() const
+{
 	char grid[15][15];
 
 	std::cout << std::endl;

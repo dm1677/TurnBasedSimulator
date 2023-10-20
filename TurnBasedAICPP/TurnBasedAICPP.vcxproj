@@ -152,9 +152,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AI.cpp" />
+    <ClCompile Include="MinimaxAI.cpp" />
     <ClCompile Include="GameState.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Match.cpp" />
+    <ClCompile Include="RandomAI.cpp" />
     <ClCompile Include="Serialiser.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Unit.cpp" />
@@ -162,9 +164,11 @@
   <ItemGroup>
     <ClInclude Include="Action.h" />
     <ClInclude Include="AI.h" />
+    <ClInclude Include="MinimaxAI.h" />
     <ClInclude Include="Enums.h" />
     <ClInclude Include="GameState.h" />
     <ClInclude Include="Match.h" />
+    <ClInclude Include="RandomAI.h" />
     <ClInclude Include="Serialiser.h" />
     <ClInclude Include="Simulator.h" />
     <ClInclude Include="Unit.h" />
