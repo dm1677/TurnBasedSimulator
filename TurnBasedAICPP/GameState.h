@@ -9,34 +9,34 @@
 struct GameState {
 public:
 	GameState() {
-		create_units();
-		player_to_move = Player;
+		createUnits();
+		m_PlayerToMove = Player;
 	};
-	explicit GameState(const std::vector<Unit>& units, User player) : units(units), player_to_move(player) {};
+	explicit GameState(const std::vector<Unit>& units, User player) : m_Units(units), m_PlayerToMove(player) {};
 
-	User GetPlayer() const { return player_to_move; }
+	User GetPlayer() const { return m_PlayerToMove; }
 	User GetEnemy() const;
 
-	int GetMoney(User user) const;
+	unsigned char GetMoney(User user) const;
 
 	static bool IsInBounds(int x, int y);
-	bool passable(int x, int y) const;
-	bool game_over();
-	int result();
+	bool IsPassable(int x, int y) const;
+	bool IsGameOver();
+	int GetResult();
 
 	std::vector<Action> GetLegalMoves();
-	std::vector<std::pair<int, int>> get_movement(const Unit &unit);
-	std::vector<int> get_attacks(const Unit &unit);
+	std::vector<std::pair<int, int>> GetMovement(const Unit &unit) const;
+	std::vector<int> GetAttacks(const Unit &unit);
 
-	void print_units();
+	void PrintUnits();
 	void DrawGrid();
 
-	std::vector<Unit> GetUnitData() const { return units; }
+	std::vector<Unit> GetUnitData() const { return m_Units; }
 private:
-	std::vector<Unit> units;
-	std::stack<Action> actions;
-	User player_to_move;
+	std::vector<Unit> m_Units;
+	std::stack<Action> m_Actions;
+	User m_PlayerToMove;
 
-	void create_units();
+	void createUnits();
 };
 

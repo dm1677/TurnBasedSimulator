@@ -1,9 +1,9 @@
 #include "Simulator.h"
 
-GameState Simulator::GenerateNewState(Action& action)
+GameState Simulator::GenerateNewState(const Action& action)
 {
-	m_action = action;
-	switch (m_action.GetActionType())
+	m_Action = action;
+	switch (m_Action.GetActionType())
 	{
 	case Move:
 		executeMoveAction();
@@ -16,63 +16,63 @@ GameState Simulator::GenerateNewState(Action& action)
 		break;
 	}
 
-	m_state = GameState(m_units, m_state.GetEnemy());
-	return m_state;
+	m_State = GameState(m_Units, m_State.GetEnemy());
+	return m_State;
 }
 
 void Simulator::executeMoveAction()
 {
-	auto destinationX = m_action.GetX();
-	auto destinationY = m_action.GetY();
+	auto destinationX = m_Action.GetX();
+	auto destinationY = m_Action.GetY();
 
 	//Add some error handling
-	if(!m_state.IsInBounds(destinationX, destinationY)) return;
-	for (auto unit : m_units) {
+	if(!GameState::IsInBounds(destinationX, destinationY)) return;
+	for (auto unit : m_Units) {
 		if (unit.GetX() == destinationX && unit.GetY() == destinationY)
 			return;
 	}
 
-	m_units[m_action.GetUnit1()].setX(destinationX);
-	m_units[m_action.GetUnit1()].setY(destinationY);
+	m_Units[m_Action.GetUnit1()].SetX(destinationX);
+	m_Units[m_Action.GetUnit1()].SetY(destinationY);
 }
 
 void Simulator::executeAttackAction()
 {
-	auto attacker = m_units[m_action.GetUnit1()];
-	auto defender = m_units[m_action.GetUnit2()];
+	auto attacker = m_Units[m_Action.GetUnit1()];
+	auto defender = m_Units[m_Action.GetUnit2()];
 	if (defender.TakeDamage(attacker.GetDamage())) return;
 
 	if (attacker.IsMoveAttacker()) {
-		attacker.setX(defender.GetX());
-		attacker.setY(defender.GetY());
+		attacker.SetX(defender.GetX());
+		attacker.SetY(defender.GetY());
 	}
 
-	m_units.erase(m_units.begin() + m_action.GetUnit2());
+	m_Units.erase(m_Units.begin() + m_Action.GetUnit2());
 }
 
 void Simulator::executeCreateAction()
 {
-	auto destinationX = m_action.GetX();
-	auto destinationY = m_action.GetY();
+	auto destinationX = m_Action.GetX();
+	auto destinationY = m_Action.GetY();
 
 	//Error code here
-	for (auto unit : m_units) {
+	for (auto unit : m_Units) {
 		if (unit.GetX() == destinationX && unit.GetY() == destinationY)
 			return;
 	}
 
-	int money = m_state.GetMoney(m_state.GetPlayer());
-	int cost = Unit::get_cost(m_action.GetUnitType());
+	auto money = m_State.GetMoney(m_State.GetPlayer());
+	auto cost = Unit::GetCost(m_Action.GetUnitType());
 	if (money < cost)
 		return;
 	//
 
-	m_units[m_state.GetPlayer()].setHealth(money - cost);
+	m_Units[m_State.GetPlayer()].SetHealth(money - cost);
 
 	Unit unit(destinationX,
 	          destinationY,
-		      Unit::GetMaxHealth(m_action.GetUnitType()),
-		      (int)m_action.GetUnitType(),
-		      (int)m_state.GetPlayer());
-	m_units.push_back(unit);
+		      Unit::GetMaxHealth(m_Action.GetUnitType()),
+		      (int)m_Action.GetUnitType(),
+		      (int)m_State.GetPlayer());
+	m_Units.push_back(unit);
 }

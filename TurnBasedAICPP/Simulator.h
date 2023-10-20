@@ -7,14 +7,15 @@
 class Simulator
 {
 public:
-	Simulator(GameState& state, Action& action) : m_state(state), m_action(action), m_units(state.GetUnitData()) {};
-	GameState GenerateNewState(Action& action);
-	GameState GetCurrentState() const { return m_state; }
+	Simulator() : m_State(GameState()), m_Action(Action()), m_Units(m_State.GetUnitData()) {};
+	Simulator(GameState& state, Action& action) : m_State(state), m_Action(action), m_Units(state.GetUnitData()) {};
+	GameState GenerateNewState(const Action& action);
+	GameState GetCurrentState() const { return m_State; }
 
 private:
-	GameState& m_state;
-	Action& m_action;
-	std::vector<Unit> m_units;
+	GameState m_State;
+	Action m_Action;
+	std::vector<Unit> m_Units;
 
 	void executeMoveAction();
 	void executeAttackAction();

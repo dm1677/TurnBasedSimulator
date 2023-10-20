@@ -5,34 +5,34 @@
 
 bool Unit::TakeDamage(unsigned char damage)
 {
-	if (health > damage)
+	if (m_Health > damage)
 	{
-		health -= damage;
+		m_Health -= damage;
 		return true;
 	}
 	return false;
 }
 
-void Unit::print() {
-	std::cout << "Position: " << (int)x << ", " << (int)y << std::endl;
-	std::cout << "Health: " << (int)health << std::endl;
-	std::cout << "Unit type: " << (UnitType)unit_type << std::endl;
-	std::cout << "Owner: " << (User)owner << std::endl;
+void Unit::Print() {
+	std::cout << "Position: " << (int)m_X << ", " << (int)m_Y << std::endl;
+	std::cout << "Health: " << (int)m_Health << std::endl;
+	std::cout << "Unit type: " << (UnitType)m_UnitType << std::endl;
+	std::cout << "Owner: " << (User)m_Owner << std::endl;
 }
 
-void Unit::write() {
+void Unit::Write() {
 	std::ofstream file;
 	file.open("unit.txt");
 
-	file << "Position: " << (int)x << ", " << (int)y << std::endl;
-	file << "Health: " << (int)health << std::endl;
-	file << "Unit type: " << unit_type << std::endl;
-	file << "Owner: " << owner;
+	file << "Position: " << (int)m_X << ", " << (int)m_Y << std::endl;
+	file << "Health: " << (int)m_Health << std::endl;
+	file << "Unit type: " << m_UnitType << std::endl;
+	file << "Owner: " << m_Owner;
 
 	file.close();
 }
 
-void Unit::read() {
+void Unit::Read() {
 	std::ifstream file("unit.txt");
 	std::string text;
 
@@ -46,7 +46,7 @@ void Unit::read() {
 
 bool Unit::IsMoveAttacker() const
 {
-	switch (unit_type) {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return true;
 	case (int)Building:
@@ -62,9 +62,9 @@ bool Unit::IsMoveAttacker() const
 	}
 }
 
-bool Unit::IsMoveAttacker(UnitType unit_type)
+bool Unit::IsMoveAttacker(UnitType unitType)
 {
-	switch (unit_type) {
+	switch (unitType) {
 	case (int)Prawn:
 		return true;
 	case (int)Building:
@@ -80,9 +80,9 @@ bool Unit::IsMoveAttacker(UnitType unit_type)
 	}
 }
 
-char Unit::get_char_representation()
+char Unit::GetCharRepresentation() const
 {
-	switch (unit_type) {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return 'P';
 	case (int)Building:
@@ -102,8 +102,8 @@ char Unit::get_char_representation()
 	}
 }
 
-Direction Unit::get_direction() const {
-	switch (unit_type) {
+Direction Unit::GetDirection() const {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return Line;
 	case (int)Building:
@@ -119,8 +119,8 @@ Direction Unit::get_direction() const {
 	}
 }
 
-int Unit::get_speed() const {
-	switch (unit_type) {
+int Unit::GetSpeed() const {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return 2;
 	case (int)Building:
@@ -140,7 +140,7 @@ int Unit::get_speed() const {
 	}
 }
 
-int Unit::get_speed(UnitType unit_type) {
+int Unit::GetSpeed(UnitType unit_type) {
 	switch (unit_type) {
 	case (int)Prawn:
 		return 2;
@@ -162,7 +162,7 @@ int Unit::get_speed(UnitType unit_type) {
 }
 
 int Unit::GetMaxHealth() const{
-	switch (unit_type) {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return 13;
 	case (int)Building:
@@ -182,8 +182,8 @@ int Unit::GetMaxHealth() const{
 	}
 }
 
-int Unit::GetMaxHealth(UnitType unit_type) {
-	switch (unit_type) {
+int Unit::GetMaxHealth(UnitType unitType) {
+	switch (unitType) {
 	case (int)Prawn:
 		return 13;
 	case (int)Building:
@@ -204,7 +204,7 @@ int Unit::GetMaxHealth(UnitType unit_type) {
 }
 
 unsigned char Unit::GetDamage() const{
-	switch (unit_type) {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return 5;
 	case (int)Building:
@@ -245,7 +245,28 @@ unsigned char Unit::GetDamage(UnitType unit_type) {
 	}
 }
 
-int Unit::get_cost() const{
+unsigned char Unit::GetCost() const{
+	switch (m_UnitType){
+	case (int)Prawn:
+		return 5;
+	case (int)Building:
+		return 8;
+	case (int)King:
+		return 0;
+	case (int)Knight:
+		return 12;
+	case (int)Gobbo:
+		return 3;
+	case (int)Tree:
+		return 0;
+	case (int)Resource:
+		return 0;
+	default:
+		return 0;
+	}
+}
+
+unsigned char Unit::GetCost(UnitType unit_type) {
 	switch (unit_type) {
 	case (int)Prawn:
 		return 5;
@@ -266,30 +287,9 @@ int Unit::get_cost() const{
 	}
 }
 
-int Unit::get_cost(UnitType unit_type) {
-	switch (unit_type) {
-	case (int)Prawn:
-		return 5;
-	case (int)Building:
-		return 8;
-	case (int)King:
-		return 0;
-	case (int)Knight:
-		return 12;
-	case (int)Gobbo:
-		return 3;
-	case (int)Tree:
-		return 0;
-	case (int)Resource:
-		return 0;
-	default:
-		return 0;
-	}
-}
-
-int Unit::get_range() const
+int Unit::GetRange() const
 {
-	switch (unit_type) {
+	switch (m_UnitType) {
 	case (int)Prawn:
 		return 4;
 	case (int)Building:
@@ -305,7 +305,7 @@ int Unit::get_range() const
 	}
 }
 
-int Unit::get_range(UnitType unit_type)
+int Unit::GetRange(UnitType unit_type)
 {
 	switch (unit_type) {
 	case (int)Prawn:

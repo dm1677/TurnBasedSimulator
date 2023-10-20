@@ -46,9 +46,9 @@ void writeUnitsToFile(const std::vector<Unit>& units, const std::string& filenam
 
 		packedData |= (unit.GetX() & 0x0F);
 		packedData |= ((unit.GetY() & 0x0F) << 4);
-		packedData |= ((unit.getHealth() & 0xFF) << 8);
-		packedData |= ((unit.getUnitType() & 0x07) << 16);
-		packedData |= ((unit.getOwner() & 0x03) << 19);
+		packedData |= ((unit.GetHealth() & 0xFF) << 8);
+		packedData |= ((unit.GetUnitType() & 0x07) << 16);
+		packedData |= ((unit.GetOwner() & 0x03) << 19);
 
 		outFile.write(reinterpret_cast<char*>(&packedData), sizeof(packedData));
 	}
@@ -87,10 +87,9 @@ std::vector<Unit> readUnitsFromFile(const std::string& filename) {
 
 int main()
 {
-	//Match match;
-	//match.UpdateState(Action(Prawn, 1, 1));
+	Match match;
+	match.UpdateState(Action(Prawn, 0, 1));
 
-	std::cout << "Test\n";
 
 	/*GameState state;
 	state.DrawGrid();

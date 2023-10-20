@@ -1,7 +1,8 @@
 #include "Match.h"
 
-/*void Match::UpdateState(const Action& action)
+void Match::UpdateState(const Action& action)
 {
-	auto state = m_simulator.GetCurrentState();
+	m_Simulator.GenerateNewState(action);
+	auto state = m_Simulator.GetCurrentState();
 	state.DrawGrid();
-}*/
+}
