@@ -1,6 +1,6 @@
 #include <iostream>
 #include "GameState.h"
-#include "AI.h"
+#include "RandomAI.h"
 #include "Match.h"
 #include <chrono>
 #include <ctime>
@@ -27,7 +27,7 @@ void CountMoves(GameState state)
 void ExecuteAndRenderAction(Simulator simulator, const Action& action)
 {
 	simulator.GenerateNewState(action);
-	simulator.GetCurrentState().DrawGrid();
+	//simulator.GetCurrentState().DrawGrid();
 	CountMoves(simulator.GetCurrentState());
 }
 
@@ -35,6 +35,19 @@ void ExecuteAndRenderAction(Simulator simulator, const Action& action)
 int main()
 {
 	Match match;
+
+	for (int i = 0; i < 10; i++) {
+		auto state = match.GetCurrentGameState();
+		RandomAI randomAI(state);
+		auto action = randomAI.GetAction();
+		match.UpdateState(action);
+	}
+
+
+	//auto action = randomAI.GetAction();
+	//auto action = Action(Prawn, 2, 2);
+	//match.UpdateState(action);
+
 	/*
 	match.UpdateState(Action(Prawn, 7, 7));
 	match.UpdateState(Action(Prawn, 1, 1));

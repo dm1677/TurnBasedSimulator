@@ -32,7 +32,7 @@ User GameState::GetEnemy() const {
 	if (m_PlayerToMove == Enemy) { return Player; }
 }
 
-std::vector<Action> GameState::GetLegalMoves() {
+std::vector<Action> GameState::GetLegalMoves() const {
 
 	std::vector<Action> moves;
 	unsigned char money = GetMoney(m_PlayerToMove);
@@ -45,14 +45,13 @@ std::vector<Action> GameState::GetLegalMoves() {
 			{
 				if (!IsPassable(x, y)) continue;
 
-				Action action(Gobbo, x, y);
-				moves.push_back(action);
+				moves.emplace_back(Gobbo, x, y);
 				if (money >= 5)
-					moves.push_back({ Prawn, x, y });
+					moves.emplace_back(Prawn, x, y);
 				if (money >= 8)
-					moves.push_back({ Building, x, y });
+					moves.emplace_back( Building, x, y );
 				if (money >= 12)
-					moves.push_back({ Knight, x, y });
+					moves.emplace_back(Knight, x, y );
 			}
 		}
 	}
@@ -122,7 +121,7 @@ std::vector<std::pair<unsigned char, unsigned char>> GameState::GetMovement(cons
 	return moves;
 }
 
-std::vector<int> GameState::GetAttacks(const Unit &unit) {
+std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
 	std::vector<int> enemy_m_Units;
 	std::vector<int> attack_actions;
