@@ -33,3 +33,10 @@ enum FileType {
 	Binary,
 	Text
 };
+
+struct Pos
+{
+public:
+	Pos(unsigned char x, unsigned char y) : X(x), Y(y) {}
+	const unsigned char X, Y;
+};

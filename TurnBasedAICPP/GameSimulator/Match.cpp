@@ -22,12 +22,9 @@ void Match::PlayReplayFromFile(const std::string& filename)
 	{
 		Serialiser serialiser;
 		auto actions = serialiser.ReadReplayFile(filename);
-		if (actions == nullptr) return;
-		for (const Action& action : *actions)
-		{
+		
+		for (const Action& action : actions)
 			UpdateState(action);
-		}
-		delete actions;
 	}
 }
 

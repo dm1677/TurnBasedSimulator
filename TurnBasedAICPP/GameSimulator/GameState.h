@@ -4,7 +4,6 @@
 #include "Action.h"
 #include <vector>
 #include <iostream>
-#include <stack>
 
 struct GameState {
 public:
@@ -21,11 +20,11 @@ public:
 
 	static bool IsInBounds(int x, int y);
 	bool IsPassable(int x, int y) const;
-	bool IsGameOver();
-	int GetResult();
+	bool IsGameOver() const;
+	int GetResult() const;
 
 	std::vector<Action> GetLegalMoves() const;
-	std::vector<std::pair<unsigned char, unsigned char>> GetMovement(const Unit &unit) const;
+	std::vector<Pos> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit) const;
 
 	void GetMoveCounts() const;
@@ -35,7 +34,6 @@ public:
 	std::vector<Unit> GetUnitData() const { return m_Units; }
 private:
 	std::vector<Unit> m_Units;
-	std::stack<Action> m_Actions;
 	User m_PlayerToMove;
 
 	void createUnits();

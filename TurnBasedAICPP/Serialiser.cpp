@@ -95,11 +95,11 @@ void Serialiser::WriteReplayToFile(const std::vector<Action>& actions, const std
 	file.close();
 }
 
-std::vector<Action>* Serialiser::ReadReplayFile(const std::string& filename) const
+std::vector<Action> Serialiser::ReadReplayFile(const std::string& filename) const
 {
 	std::ifstream file;
 	std::string line;
-	std::vector<Action>* actions = new std::vector<Action>();
+	std::vector<Action> actions;
 	std::vector<std::string> actionData;
 	file.open(filename);
 	
@@ -109,8 +109,7 @@ std::vector<Action>* Serialiser::ReadReplayFile(const std::string& filename) con
 		{
 			if (!actionData.empty())
 			{
-				Action action = deserialiseAction(actionData);
-				actions->push_back(action);
+				actions.push_back(deserialiseAction(actionData));
 				actionData.clear();
 			}
 		}

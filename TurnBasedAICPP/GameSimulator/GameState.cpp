@@ -1,6 +1,7 @@
 #include "GameState.h"
 
-bool GameState::IsPassable(int x, int y) const {
+bool GameState::IsPassable(int x, int y) const
+{
 	for (Unit unit : m_Units) {
 		if (unit.GetX()  == x && unit.GetY() == y) {
 			return false;
@@ -9,7 +10,7 @@ bool GameState::IsPassable(int x, int y) const {
 	return true;
 }
 
-bool GameState::IsGameOver()
+bool GameState::IsGameOver() const
 {
 	if (m_Units[4].GetUnitType() == King) { return false; }
 	if (m_Units[3].GetUnitType() != King) { return true; }
@@ -18,11 +19,10 @@ bool GameState::IsGameOver()
 	return true;
 }
 
-int GameState::GetResult() {
+int GameState::GetResult() const
+{
 	if (IsGameOver())
-	{
 		return m_Units[2].GetOwner();
-	}
 
 	return -1;
 }
@@ -57,64 +57,58 @@ std::vector<Action> GameState::GetLegalMoves() const {
 	}
 	
 	for (uint32_t i = 0; i < m_Units.size(); i++) {
-		if (m_Units[i].GetOwner() != (int)m_PlayerToMove) { continue; }
-		if (m_Units[i].GetUnitType() == (int)Resource) { continue; }
-		auto movement = GetMovement(m_Units[i]);
-		for (auto m : movement)
-		{
-			Action action(i, m.first, m.second);			
-			moves.push_back(action);
-		}
+		if (m_Units[i].GetOwner() != (int)m_PlayerToMove) continue;
+		if (m_Units[i].GetUnitType() == (int)Resource) continue;
+		
+		for (const auto &move : GetMovement(m_Units[i]))
+			moves.emplace_back(i, move.X, move.Y);
 
-		auto attacks = GetAttacks(m_Units[i]);
-		for (auto a : attacks)
-		{
-			Action action(i, a);
-			moves.push_back(action);
-		}
+		for (auto &attack : GetAttacks(m_Units[i]))
+			moves.emplace_back(i, attack);
 	}
 	
 	return moves;
 }
 
-std::vector<std::pair<unsigned char, unsigned char>> GameState::GetMovement(const Unit &unit) const
+std::vector<Pos> GameState::GetMovement(const Unit &unit) const
 {
 	int speed = unit.GetSpeed();
-	std::vector<std::pair<unsigned char, unsigned char>> moves;
+	std::vector<Pos> moves;
 
 	if (speed == 0) { return moves; }
 
-	std::pair<int, int> current_position(unit.GetX(), unit.GetY());
+	Pos currentPosition(unit.GetX(), unit.GetY());
 
-	const std::vector<std::pair<int, int>> cardinal_vectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-	const std::vector<std::pair<int, int>> diagonal_vectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
+	const std::vector<Pos> cardinalVectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+	const std::vector<Pos> diagonalVectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
 
-	std::vector<std::pair<int, int>> vectors;
+	std::vector<Pos> vectors;
 
 	switch (unit.GetDirection()) {
 	case Line:
-		vectors = cardinal_vectors;
+		vectors = cardinalVectors;
 		break;
 	case Diagonal:
-		vectors = diagonal_vectors;
+		vectors = diagonalVectors;
 		break;
 	case LineAndDiagonal:
-		vectors = cardinal_vectors;
-		vectors.insert(vectors.end(), diagonal_vectors.begin(), diagonal_vectors.end());
+		vectors = cardinalVectors;
+		vectors.insert(vectors.end(), diagonalVectors.begin(), diagonalVectors.end());
 		break;
 	}
+
 	int x, y;
-
-	for (uint32_t k = 0; k < vectors.size(); k++)
+	for (auto k = 0; k < vectors.size(); k++)
 	{
-		for (int i = 1; i <= speed; i++)
+		for (auto i = 1; i <= speed; i++)
 		{
-			x = current_position.first + (i * vectors[k].first);
-			y = current_position.second + (i * vectors[k].second);
+			x = currentPosition.X + (i * vectors[k].X);
+			y = currentPosition.Y + (i * vectors[k].Y);
 
-			if (!IsInBounds(x, y) || !IsPassable(x, y)) { break; }
+			if (!IsInBounds(x, y) || !IsPassable(x, y))
+				break;
 
-			moves.push_back(std::make_pair(x, y));
+			moves.emplace_back(x, y);
 		}
 	}
 
@@ -123,21 +117,21 @@ std::vector<std::pair<unsigned char, unsigned char>> GameState::GetMovement(cons
 
 std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
-	std::vector<int> enemy_m_Units;
-	std::vector<int> attack_actions;
+	std::vector<int> enemyUnits;
+	std::vector<int> attackActions;
 
 	for (uint32_t i = 2; i < m_Units.size(); i++)
 	{
 		if (m_Units[i].GetOwner() != Neutral && m_Units[i].GetOwner() != m_PlayerToMove)
 		{
-			enemy_m_Units.push_back(i);
+			enemyUnits.push_back(i);
 		}
 	}
 
-	const std::vector<std::pair<int, int>> cardinal_vectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-	const std::vector<std::pair<int, int>> diagonal_vectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
+	const std::vector<Pos> cardinal_vectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
+	const std::vector<Pos> diagonal_vectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
 
-	std::vector<std::pair<int, int>> vectors;
+	std::vector<Pos> vectors;
 
 	switch (unit.GetDirection()) {
 	case Line:
@@ -157,21 +151,21 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 	{
 		for (int i = 1; i <= unit.GetRange(); i++)
 		{
-			x = unit.GetX() + (i * vectors[k].first);
-			y = unit.GetY() + (i * vectors[k].second);
+			x = unit.GetX() + (i * vectors[k].X);
+			y = unit.GetY() + (i * vectors[k].Y);
 
-			if (!IsInBounds(x, y) || !IsPassable(x, y)) { break; }
+			if (!IsInBounds(x, y) || !IsPassable(x, y)) break;
 
-			for (uint32_t j = 1; j < enemy_m_Units.size(); j++)
+			for (uint32_t j = 1; j < enemyUnits.size(); j++)
 			{
 				if (m_Units[j].GetX() == x && m_Units[j].GetY() == y) {
-					attack_actions.push_back(j);
+					attackActions.push_back(j);
 				}
 			}
 		}
 	}
 
-	return attack_actions;
+	return attackActions;
 }
 
 bool GameState::IsInBounds(int x, int y)
@@ -188,7 +182,7 @@ bool GameState::IsInBounds(int x, int y)
 
 void GameState::PrintUnits() const
 {
-	for (auto unit : m_Units)
+	for (auto &unit : m_Units)
 	{
 		unit.Print();
 		std::cout << std::endl;
@@ -209,7 +203,7 @@ void GameState::DrawGrid() const
 		}
 	}
 
-	for (auto unit : m_Units)
+	for (auto &unit : m_Units)
 	{
 		grid[unit.GetX()][unit.GetY()] = unit.GetCharRepresentation();
 	}
@@ -226,26 +220,18 @@ void GameState::DrawGrid() const
 
 void GameState::createUnits()
 {
-	Unit add_unit(15, 15, 8, (int)Resource, (int)Player);
-	Unit add_unit2(15, 15, 8, (int)Resource, (int)Enemy);
-	m_Units.push_back(add_unit);
-	m_Units.push_back(add_unit2);
+	m_Units.emplace_back(15, 15, 8, Resource, Player);
+	m_Units.emplace_back(15, 15, 8, Resource, Enemy);
+	m_Units.emplace_back(0, 0, 40, King, Player);
+	m_Units.emplace_back(0, 14, 40, King, Player);
+	m_Units.emplace_back(14, 0, 40, King, Enemy);
+	m_Units.emplace_back(14, 14, 40, King, Enemy);
 
-	Unit a(0, 0, 40, (int)King, (int)Player);
-	Unit b(0, 14, 40, (int)King, (int)Player);
-	Unit c(14, 0, 40, (int)King, (int)Enemy);
-	Unit d(14, 14, 40, (int)King, (int)Enemy);
-	m_Units.push_back(a);
-	m_Units.push_back(b);
-	m_Units.push_back(c);
-	m_Units.push_back(d);
+	const std::vector<Pos> treePositions = 
+		{ { 7, 0 }, { 0, 7 }, { 14, 7 }, { 7, 14 }, { 6,6 }, { 8,8 }, { 6,8 }, { 8,6 } };
 
-	std::vector<std::pair<unsigned char, unsigned char>> vectors = { { 7, 0 }, { 0, 7 }, { 14, 7 }, { 7, 14 }, { 6,6 }, { 8,8 }, { 6,8 }, { 8,6 } };
-
-	for (auto pair : vectors) {
-		Unit u(pair.first, pair.second, 0, (int)Tree, (int)Neutral);
-		m_Units.push_back(u);
-	}
+	for (auto& position : treePositions)
+		m_Units.emplace_back(position.X, position.Y, 0, Tree, Neutral);
 }
 
 unsigned char GameState::GetMoney(User user) const
