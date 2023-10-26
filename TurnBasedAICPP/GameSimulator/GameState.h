@@ -3,6 +3,7 @@
 #include "Unit.h"
 #include "Action.h"
 #include <vector>
+#include <array>
 #include <iostream>
 
 struct GameState {
@@ -37,5 +38,6 @@ private:
 	User m_PlayerToMove;
 
 	void createUnits();
+	std::array<Vec2, 8> getDirectionVectors(Direction direction) const;
 };
 

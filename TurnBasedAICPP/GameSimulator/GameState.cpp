@@ -70,6 +70,37 @@ std::vector<Action> GameState::GetLegalMoves() const {
 	return moves;
 }
 
+std::array<Vec2, 8> GameState::getDirectionVectors(Direction direction) const
+{
+	const std::array<Vec2, 4> cardinalVectors = { {{1, 0}, {0, 1}, {-1, 0}, {0, -1}} };
+	const std::array<Vec2, 4> diagonalVectors = { {{1, -1}, {1, 1}, {-1, 1}, {-1, -1}} };
+
+	std::array<Vec2, 8> vectors;
+	std::size_t numVectors = 0;
+
+	switch (direction) {
+	case Line:
+		std::copy(cardinalVectors.begin(), cardinalVectors.end(), vectors.begin());
+		numVectors = cardinalVectors.size();
+		break;
+	case Diagonal:
+		std::copy(diagonalVectors.begin(), diagonalVectors.end(), vectors.begin());
+		numVectors = diagonalVectors.size();
+		break;
+	case LineAndDiagonal:
+		numVectors = 0;
+		for (const auto& v : cardinalVectors) {
+			vectors[numVectors++] = v;
+		}
+		for (const auto& v : diagonalVectors) {
+			vectors[numVectors++] = v;
+		}
+		break;
+	}
+
+	return vectors;
+}
+
 std::vector<Pos> GameState::GetMovement(const Unit &unit) const
 {
 	int speed = unit.GetSpeed();
@@ -79,23 +110,7 @@ std::vector<Pos> GameState::GetMovement(const Unit &unit) const
 
 	Pos currentPosition(unit.GetX(), unit.GetY());
 
-	const std::vector<Pos> cardinalVectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-	const std::vector<Pos> diagonalVectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
-
-	std::vector<Pos> vectors;
-
-	switch (unit.GetDirection()) {
-	case Line:
-		vectors = cardinalVectors;
-		break;
-	case Diagonal:
-		vectors = diagonalVectors;
-		break;
-	case LineAndDiagonal:
-		vectors = cardinalVectors;
-		vectors.insert(vectors.end(), diagonalVectors.begin(), diagonalVectors.end());
-		break;
-	}
+	std::array<Vec2, 8> vectors = getDirectionVectors(unit.GetDirection());
 
 	int x, y;
 	for (auto k = 0; k < vectors.size(); k++)
@@ -128,23 +143,8 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 		}
 	}
 
-	const std::vector<Pos> cardinal_vectors = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 } };
-	const std::vector<Pos> diagonal_vectors = { { 1, -1 }, { 1, 1 }, { -1, 1 }, { -1, -1 } };
+	auto vectors = getDirectionVectors(unit.GetDirection());
 
-	std::vector<Pos> vectors;
-
-	switch (unit.GetDirection()) {
-	case Line:
-		vectors = cardinal_vectors;
-		break;
-	case Diagonal:
-		vectors = diagonal_vectors;
-		break;
-	case LineAndDiagonal:
-		vectors = cardinal_vectors;
-		vectors.insert(vectors.end(), diagonal_vectors.begin(), diagonal_vectors.end());
-		break;
-	}
 	int x, y;
 
 	for (uint32_t k = 0; k < vectors.size(); k++)
