@@ -227,8 +227,8 @@ void GameState::createUnits()
 	m_Units.emplace_back(14, 0, 40, King, Enemy);
 	m_Units.emplace_back(14, 14, 40, King, Enemy);
 
-	const std::vector<Pos> treePositions = 
-		{ { 7, 0 }, { 0, 7 }, { 14, 7 }, { 7, 14 }, { 6,6 }, { 8,8 }, { 6,8 }, { 8,6 } };
+	const std::array<Pos, 8> treePositions =
+		{ Pos(7, 1), Pos(1, 7), Pos(13, 7), Pos(7, 13), Pos(6, 6), Pos(8, 8), Pos(6, 8), Pos(8, 6) };
 
 	for (auto& position : treePositions)
 		m_Units.emplace_back(position.X, position.Y, 0, Tree, Neutral);
