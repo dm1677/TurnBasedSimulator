@@ -7,16 +7,6 @@
 
 int main()
 {
-	Match match;
-	match.UpdateState(Action(Prawn, 3, 3));
-	match.UpdateState(Action(Gobbo, 9, 9));
-	auto moves = match.GetCurrentGameState().GetLegalMoves();
-	for (auto& move : moves)
-	{
-		if (move.GetActionType() == Swap)
-			std::cout << "Swap\n";
-	}
-	/*
 	int matchCount = 1;
 	int movesPerMatch = 400;
 
@@ -35,6 +25,6 @@ int main()
 
 	std::chrono::duration<double> elapsed_seconds = end - start;
 	std::cout << "\n\n\nElapsed time: " << elapsed_seconds.count() << "s\n";
-	*/
+	
 	system("pause>0");
 }

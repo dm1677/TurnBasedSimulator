@@ -12,7 +12,7 @@ public:
 	ActionType GetActionType() const { return m_ActionType; }
 	UnitType GetUnitType() const { return m_UnitType; }
 
-	Action(ActionType actionType, int unit1, int unit2, unsigned char x, unsigned char y, UnitType unitType)
+	Action(ActionType actionType, int unit1, int unit2, unsigned char x=15, unsigned char y=15, UnitType unitType=Prawn)
 		: m_X(x), m_Y(y), m_Unit1(unit1), m_Unit2(unit2), m_ActionType(actionType), m_UnitType(unitType) {};
 
 	//Move unit to x, y
