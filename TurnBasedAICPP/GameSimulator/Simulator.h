@@ -20,5 +20,6 @@ private:
 	bool executeMoveAction();
 	bool executeAttackAction();
 	bool executeCreateAction();
+	bool executeSwapAction();
 };
 

@@ -16,8 +16,12 @@ GameState Simulator::GenerateNewState(const Action& action)
 	case Create:
 		success = executeCreateAction();
 		break;
+	case Swap:
+		success = executeSwapAction();
+		break;
 	default:
 		success = false;
+		break;
 	}
 
 	if (!success) return m_State;
@@ -83,5 +87,26 @@ bool Simulator::executeCreateAction()
 		      m_Action.GetUnitType(),
 		      m_State.GetPlayer());
 	m_Units.push_back(unit);
+	return true;
+}
+
+bool Simulator::executeSwapAction()
+{
+	auto& prawn = m_Units[m_Action.GetUnit1()];
+	auto& swappedUnit = m_Units[m_Action.GetUnit2()];
+
+	if (prawn.GetUnitType() != Prawn) return false;
+	if (swappedUnit.GetSpeed() == 0) return false;
+	if (prawn.GetOwner() != m_State.GetPlayer()) return false;
+	if (swappedUnit.GetOwner() != m_State.GetPlayer()) return false;
+
+	Pos prawnPos(prawn.GetX(), prawn.GetY());
+
+	prawn.SetX(swappedUnit.GetX());
+	prawn.SetY(swappedUnit.GetY());
+
+	swappedUnit.SetX(prawnPos.X);
+	swappedUnit.SetY(prawnPos.Y);
+
 	return true;
 }

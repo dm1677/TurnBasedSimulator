@@ -20,7 +20,8 @@ enum User {
 enum ActionType {
 	Move,
 	Attack,
-	Create
+	Create,
+	Swap
 };
 
 enum Direction {

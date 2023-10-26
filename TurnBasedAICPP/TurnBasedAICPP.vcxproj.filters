@@ -18,60 +18,60 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Unit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameState.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MinimaxAI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Simulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Match.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Serialiser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AI.cpp">
+    <ClCompile Include="AI\AI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RandomAI.cpp">
+    <ClCompile Include="AI\MinimaxAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSimulator\GameState.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSimulator\Match.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AI\RandomAI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSimulator\Simulator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSimulator\Unit.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Unit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Enums.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameState.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Action.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MinimaxAI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Simulator.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Match.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Serialiser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AI.h">
+    <ClInclude Include="GameSimulator\Action.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RandomAI.h">
+    <ClInclude Include="AI\AI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\MinimaxAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSimulator\GameState.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSimulator\Match.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AI\RandomAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSimulator\Simulator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSimulator\Unit.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

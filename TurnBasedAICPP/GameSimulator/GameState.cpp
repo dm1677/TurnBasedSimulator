@@ -65,6 +65,12 @@ std::vector<Action> GameState::GetLegalMoves() const {
 
 		for (auto &attack : GetAttacks(m_Units[i]))
 			moves.emplace_back(i, attack);
+
+		if (m_Units[i].GetUnitType() == Prawn)
+		{
+			for (uint32_t j = 0; j < m_Units.size(); j++)
+				moves.emplace_back(Swap, i, j, 0, 0, Prawn);
+		}
 	}
 	
 	return moves;
