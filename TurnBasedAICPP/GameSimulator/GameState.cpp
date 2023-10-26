@@ -69,7 +69,10 @@ std::vector<Action> GameState::GetLegalMoves() const {
 		if (m_Units[i].GetUnitType() == Prawn)
 		{
 			for (uint32_t j = 0; j < m_Units.size(); j++)
-				moves.emplace_back(Swap, i, j, 0, 0, Prawn);
+			{
+				if (m_Units[j].GetOwner() == m_Units[i].GetOwner() && m_Units[j].GetSpeed() > 0 && i != j)
+					moves.emplace_back(Swap, i, j, 0, 0, Prawn);
+			}
 		}
 	}
 	

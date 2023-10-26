@@ -9,11 +9,13 @@ int main()
 {
 	Match match;
 	match.UpdateState(Action(Prawn, 3, 3));
-	match.DrawCurrentState();
 	match.UpdateState(Action(Gobbo, 9, 9));
-	match.DrawCurrentState();
-	match.UpdateState(Action(Swap, 14, 2, 0, 0, Prawn));
-	match.DrawCurrentState();
+	auto moves = match.GetCurrentGameState().GetLegalMoves();
+	for (auto& move : moves)
+	{
+		if (move.GetActionType() == Swap)
+			std::cout << "Swap\n";
+	}
 	/*
 	int matchCount = 1;
 	int movesPerMatch = 400;

@@ -99,6 +99,7 @@ bool Simulator::executeSwapAction()
 	if (swappedUnit.GetSpeed() == 0) return false;
 	if (prawn.GetOwner() != m_State.GetPlayer()) return false;
 	if (swappedUnit.GetOwner() != m_State.GetPlayer()) return false;
+	if (m_Action.GetUnit1() == m_Action.GetUnit2()) return false;
 
 	Pos prawnPos(prawn.GetX(), prawn.GetY());
 
