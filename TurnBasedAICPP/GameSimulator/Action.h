@@ -17,15 +17,15 @@ public:
 
 	//Move unit to x, y
 	Action(int unit, unsigned char x, unsigned char y)
-		: m_X(x), m_Y(y), m_Unit1(unit), m_ActionType(Move) {};
+		: m_X(x), m_Y(y), m_Unit1(unit), m_Unit2(-1), m_ActionType(Move), m_UnitType(Prawn) {};
 
 	//Create unit_type at x, y
 	Action(UnitType unit_type, unsigned char x, unsigned char y)
-		: m_X(x), m_Y(y), m_ActionType(Create), m_UnitType(unit_type) {};
+		: m_X(x), m_Y(y), m_Unit1(-1), m_Unit2(-1), m_ActionType(Create), m_UnitType(unit_type) {};
 
 	//Attack defender with attacker
 	Action(int attacker, int defender)
-		: m_Unit1(attacker), m_Unit2(defender), m_ActionType(Attack) {};
+		: m_X(15), m_Y(15), m_Unit1(attacker), m_Unit2(defender), m_ActionType(Attack), m_UnitType(Prawn) {};
 
 	Action() {};
 

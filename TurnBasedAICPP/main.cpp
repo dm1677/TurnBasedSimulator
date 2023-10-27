@@ -5,12 +5,8 @@
 #include <chrono>
 #include <ctime>
 
-int main()
+void simulate(int matchCount, int movesPerMatch, bool draw = false)
 {
-	int matchCount = 1;
-	int movesPerMatch = 400;
-
-	auto start = std::chrono::system_clock::now();
 	for (int j = 0; j < matchCount; j++) {
 		Match match;
 		for (int i = 0; i < movesPerMatch; i++) {
@@ -18,13 +14,15 @@ int main()
 			RandomAI randomAI(state);
 			auto action = randomAI.GetAction();
 			match.UpdateState(action);
-			match.DrawCurrentState();
+			if (draw) match.DrawCurrentState();
 		}
+		//match.CreateReplayFile("output/rep.tbr");
 	}
-	auto end = std::chrono::system_clock::now();
+}
 
-	std::chrono::duration<double> elapsed_seconds = end - start;
-	std::cout << "\n\n\nElapsed time: " << elapsed_seconds.count() << "s\n";
-	
+int main()
+{
+	simulate(1, 100, true);
+
 	system("pause>0");
 }

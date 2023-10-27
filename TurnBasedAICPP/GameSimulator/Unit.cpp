@@ -3,14 +3,15 @@
 #include <fstream>
 #include <string>
 
+//Returns true if the unit's health would be reduced to a value below 0, otherwise applies the damage and returns false.
 bool Unit::TakeDamage(unsigned char damage)
 {
 	if (m_Health > damage)
 	{
 		m_Health -= damage;
-		return true;
+		return false;
 	}
-	return false;
+	return true;
 }
 
 void Unit::Print() const {
@@ -98,7 +99,7 @@ Direction Unit::GetDirection() const {
 unsigned char Unit::GetSpeed() const {
 	switch (m_UnitType) {
 	case (int)Prawn:
-		return 2;
+		return 1;
 	case (int)Building:
 		return 0;
 	case (int)King:
@@ -119,7 +120,7 @@ unsigned char Unit::GetSpeed() const {
 unsigned char Unit::GetSpeed(UnitType unit_type) {
 	switch (unit_type) {
 	case (int)Prawn:
-		return 2;
+		return 1;
 	case (int)Building:
 		return 0;
 	case (int)King:
@@ -140,15 +141,15 @@ unsigned char Unit::GetSpeed(UnitType unit_type) {
 unsigned char Unit::GetMaxHealth() const{
 	switch (m_UnitType) {
 	case (int)Prawn:
-		return 13;
+		return 5;
 	case (int)Building:
-		return 20;
+		return 15;
 	case (int)King:
 		return 40;
 	case (int)Knight:
-		return 24;
+		return 15;
 	case (int)Gobbo:
-		return 8;
+		return 5;
 	case (int)Tree:
 		return 0;
 	case (int)Resource:
@@ -161,15 +162,15 @@ unsigned char Unit::GetMaxHealth() const{
 unsigned char Unit::GetMaxHealth(UnitType unitType) {
 	switch (unitType) {
 	case (int)Prawn:
-		return 13;
+		return 5;
 	case (int)Building:
-		return 20;
+		return 15;
 	case (int)King:
 		return 40;
 	case (int)Knight:
-		return 24;
+		return 15;
 	case (int)Gobbo:
-		return 8;
+		return 5;
 	case (int)Tree:
 		return 0;
 	case (int)Resource:
@@ -184,9 +185,9 @@ unsigned char Unit::GetDamage() const{
 	case (int)Prawn:
 		return 5;
 	case (int)Building:
-		return 8;
+		return 10;
 	case (int)King:
-		return 8;
+		return 7;
 	case (int)Knight:
 		return 12;
 	case (int)Gobbo:
@@ -205,9 +206,9 @@ unsigned char Unit::GetDamage(UnitType unit_type) {
 	case (int)Prawn:
 		return 5;
 	case (int)Building:
-		return 8;
+		return 10;
 	case (int)King:
-		return 8;
+		return 7;
 	case (int)Knight:
 		return 12;
 	case (int)Gobbo:
@@ -267,7 +268,7 @@ int Unit::GetRange() const
 {
 	switch (m_UnitType) {
 	case (int)Prawn:
-		return 4;
+		return 2;
 	case (int)Building:
 		return 5;
 	case (int)King:
@@ -285,7 +286,7 @@ int Unit::GetRange(UnitType unit_type)
 {
 	switch (unit_type) {
 	case (int)Prawn:
-		return 4;
+		return 2;
 	case (int)Building:
 		return 5;
 	case (int)King:

@@ -45,6 +45,8 @@ public:
 
 	void Print() const;
 
+	void Kill() { m_X = 15; m_Y = 15; m_Health = 0; m_Owner = Neutral; }
+
 private:
 	unsigned char m_X : 4;
 	unsigned char m_Y : 4;

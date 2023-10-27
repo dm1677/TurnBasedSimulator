@@ -63,7 +63,7 @@ std::vector<Action> GameState::GetLegalMoves() const {
 		for (const auto &move : GetMovement(m_Units[i]))
 			moves.emplace_back(i, move.X, move.Y);
 
-		for (auto &attack : GetAttacks(m_Units[i]))
+		for (const auto &attack : GetAttacks(m_Units[i]))
 			moves.emplace_back(i, attack);
 
 		if (m_Units[i].GetUnitType() == Prawn)
@@ -154,22 +154,21 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
 	auto vectors = getDirectionVectors(unit.GetDirection());
 
-	int x, y;
+	int x, y;	
 
-	for (uint32_t k = 0; k < vectors.size(); k++)
+	for (const auto& vector : vectors)
 	{
 		for (int i = 1; i <= unit.GetRange(); i++)
 		{
-			x = unit.GetX() + (i * vectors[k].X);
-			y = unit.GetY() + (i * vectors[k].Y);
+			x = unit.GetX() + (i * vector.X);
+			y = unit.GetY() + (i * vector.Y);
 
-			if (!IsInBounds(x, y) || !IsPassable(x, y)) break;
+			if (!IsInBounds(x, y)) break;
 
-			for (uint32_t j = 1; j < enemyUnits.size(); j++)
+			for (auto enemyUnit : enemyUnits)
 			{
-				if (m_Units[j].GetX() == x && m_Units[j].GetY() == y) {
-					attackActions.push_back(j);
-				}
+				if (m_Units[enemyUnit].GetX() == x && m_Units[enemyUnit].GetY() == y)
+					attackActions.push_back(enemyUnit);
 			}
 		}
 	}

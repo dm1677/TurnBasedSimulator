@@ -142,6 +142,13 @@ Action Serialiser::deserialiseAction(const std::vector<std::string>& actionData)
 		return Action(std::stoi(actionData[1]),
 			          std::stoi(actionData[2]));
 	}
+	if (actionType == "SwapAction")
+	{
+		if (actionData.size() != 3) return Action();
+		return Action(Swap,
+					  std::stoi(actionData[1]),
+					  std::stoi(actionData[2]));
+	}
 	return Action();
 }
 
@@ -174,12 +181,17 @@ std::string Serialiser::getActionData(const Action& action, unsigned char owner)
 		break;
 	case Attack:
 		string += "AttackAction\n";
-		string += "\n";
 		string += std::to_string(action.GetUnit1());
 		string += "\n";
 		string += std::to_string(action.GetUnit2());
 		string += "\n";
 		break;
+	case Swap:
+		string += "SwapAction\n";
+		string += std::to_string(action.GetUnit1());
+		string += "\n";
+		string += std::to_string(action.GetUnit2());
+		string += "\n";
 	}
 	return string;
 }

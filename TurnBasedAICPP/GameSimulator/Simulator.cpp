@@ -25,6 +25,7 @@ GameState Simulator::GenerateNewState(const Action& action)
 	}
 
 	if (!success) return m_State;
+	m_Units[m_State.GetEnemy()].SetHealth(m_Units[m_State.GetEnemy()].GetHealth() + 1);
 	m_State = GameState(m_Units, m_State.GetEnemy());
 	return m_State;
 }
@@ -37,7 +38,7 @@ bool Simulator::executeMoveAction()
 	//Add some error handling
 	if(!GameState::IsInBounds(destinationX, destinationY)) return false;
 	if (m_Units[m_Action.GetUnit1()].GetOwner() != m_State.GetPlayer()) return false;
-	for (auto unit : m_Units) {
+	for (const auto& unit : m_Units) {
 		if (unit.GetX() == destinationX && unit.GetY() == destinationY)
 			return false;
 	}
@@ -49,9 +50,9 @@ bool Simulator::executeMoveAction()
 
 bool Simulator::executeAttackAction()
 {
-	auto attacker = m_Units[m_Action.GetUnit1()];
-	auto defender = m_Units[m_Action.GetUnit2()];
-	if (!defender.TakeDamage(attacker.GetDamage())) return false;
+	auto& attacker = m_Units[m_Action.GetUnit1()];
+	auto& defender = m_Units[m_Action.GetUnit2()];
+	if (!defender.TakeDamage(attacker.GetDamage())) return true;
 
 	if (attacker.IsMoveAttacker()) {
 		attacker.SetX(defender.GetX());
@@ -59,6 +60,9 @@ bool Simulator::executeAttackAction()
 	}
 
 	m_Units.erase(m_Units.begin() + m_Action.GetUnit2());
+	//defender.SetX(15);
+	//defender.SetY(15);
+	//defender.SetHealth(0);
 	return true;
 }
 
@@ -68,7 +72,7 @@ bool Simulator::executeCreateAction()
 	auto destinationY = m_Action.GetY();
 
 	//Error code here
-	for (auto unit : m_Units) {
+	for (const auto& unit : m_Units) {
 		if (unit.GetX() == destinationX && unit.GetY() == destinationY)
 			return false;
 	}
@@ -96,7 +100,7 @@ bool Simulator::executeSwapAction()
 	auto& swappedUnit = m_Units[m_Action.GetUnit2()];
 
 	if (prawn.GetUnitType() != Prawn) return false;
-	if (swappedUnit.GetSpeed() == 0) return false;
+	if (swappedUnit.GetUnitType() == Resource || swappedUnit.GetUnitType() == Tree) return false;
 	if (prawn.GetOwner() != m_State.GetPlayer()) return false;
 	if (swappedUnit.GetOwner() != m_State.GetPlayer()) return false;
 	if (m_Action.GetUnit1() == m_Action.GetUnit2()) return false;
