@@ -146,10 +146,8 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
 	for (uint32_t i = 2; i < m_Units.size(); i++)
 	{
-		if (m_Units[i].GetOwner() != Neutral && m_Units[i].GetOwner() != m_PlayerToMove)
-		{
+		if (m_Units[i].GetOwner() == GetEnemy())
 			enemyUnits.push_back(i);
-		}
 	}
 
 	auto vectors = getDirectionVectors(unit.GetDirection());
@@ -264,4 +262,9 @@ void GameState::GetMoveCounts() const
 
 	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create;
 	std::cout << "\nMoney: " << GetMoney(GetPlayer()) << std::endl;
+}
+
+std::vector<int> GameState::GetThreats(const Unit& unit) const
+{
+	return std::vector<int>();
 }

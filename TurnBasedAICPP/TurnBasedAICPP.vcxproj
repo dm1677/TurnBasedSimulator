@@ -157,6 +157,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameSimulator\Match.cpp" />
     <ClCompile Include="AI\RandomAI.cpp" />
+    <ClCompile Include="AI\RulesAI.cpp" />
     <ClCompile Include="Serialiser.cpp" />
     <ClCompile Include="GameSimulator\Simulator.cpp" />
     <ClCompile Include="GameSimulator\Unit.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="GameSimulator\GameState.h" />
     <ClInclude Include="GameSimulator\Match.h" />
     <ClInclude Include="AI\RandomAI.h" />
+    <ClInclude Include="AI\RulesAI.h" />
     <ClInclude Include="Serialiser.h" />
     <ClInclude Include="GameSimulator\Simulator.h" />
     <ClInclude Include="GameSimulator\Unit.h" />
