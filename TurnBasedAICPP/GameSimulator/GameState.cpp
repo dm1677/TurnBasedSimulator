@@ -164,13 +164,12 @@ std::vector<Pos> GameState::GetMovement(const Unit &unit) const
 
 	std::array<Vec2, 8> vectors = getDirectionVectors(unit.GetDirection());
 
-	int x, y;
 	for (auto k = 0; k < vectors.size(); k++)
 	{
 		for (auto i = 1; i <= speed; i++)
 		{
-			x = currentPosition.X + (i * vectors[k].X);
-			y = currentPosition.Y + (i * vectors[k].Y);
+			const int x = currentPosition.X + (i * vectors[k].X);
+			const int y = currentPosition.Y + (i * vectors[k].Y);
 
 			if (!IsInBounds(x, y) || !IsPassable(x, y))
 				break;
@@ -193,25 +192,30 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 
 	auto vectors = getDirectionVectors(unit.GetDirection());
 
-	int x, y;	
-
 	for (const auto& vector : vectors)
 	{
 		for (int i = 1; i <= unit.GetRange(); i++)
 		{
-			x = unit.GetX() + (i * vector.X);
-			y = unit.GetY() + (i * vector.Y);
+			const int x = unit.GetX() + (i * vector.X);
+			const int y = unit.GetY() + (i * vector.Y);
 
-			if (!IsInBounds(x, y) || !IsPassable(x, y)) break;
+			if (!IsInBounds(x, y)) break;
+
+			bool attackMade = false;
 
 			for (auto enemyUnit : enemyUnits)
 			{
 				if (m_Units[enemyUnit].GetX() == x && m_Units[enemyUnit].GetY() == y)
+				{
 					attackActions.push_back(enemyUnit);
+					attackMade = true;
+					break;
+				}
 			}
+
+			if (attackMade || !IsPassable(x, y)) break;
 		}
 	}
-
 	return attackActions;
 }
 
