@@ -235,14 +235,14 @@ void GameState::PrintUnits() const
 
 void GameState::DrawGrid() const
 {
-	const auto DEFAULT_colour = getDefaultcolour();
+	const auto defaultColour = getDefaultColour();
 	HANDLE hConsole = getConsoleHandle();
 	std::array<std::array<char, c_GridSize>, c_GridSize> grid;
 
 	initialiseGrid(grid);
 	placeUnitsOnGrid(grid);
 	displayGrid(grid, hConsole);
-	restoreDefaultTextcolour(hConsole, DEFAULT_colour);
+	restoreDefaultTextcolour(hConsole, defaultColour);
 }
 
 std::array<std::array<char, GameState::c_GridSize>, GameState::c_GridSize> GameState::getGridRepresentation() const
@@ -302,7 +302,7 @@ void GameState::setUnitColour(HANDLE hConsole, int x, int y, char unitChar) cons
 	}
 	else
 	{
-		SetConsoleTextAttribute(hConsole, getDefaultcolour());
+		SetConsoleTextAttribute(hConsole, getDefaultColour());
 	}
 }
 
@@ -317,11 +317,11 @@ WORD GameState::getUnitcolour(const Unit& unit) const
 	case Neutral:
 		return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
 	default:
-		return getDefaultcolour();
+		return getDefaultColour();
 	}
 }
 
-WORD GameState::getDefaultcolour() const
+WORD GameState::getDefaultColour() const
 {
 	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
 }

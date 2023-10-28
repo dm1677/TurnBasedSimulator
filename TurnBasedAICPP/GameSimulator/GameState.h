@@ -57,7 +57,7 @@ private:
 	void displayGrid(const std::array<std::array<char, c_GridSize>, c_GridSize>& grid, HANDLE hConsole) const;
 	void setUnitColour(HANDLE hConsole, int x, int y, char unitChar) const;
 	WORD getUnitcolour(const Unit& unit) const;
-	WORD getDefaultcolour() const;
+	WORD getDefaultColour() const;
 	void restoreDefaultTextcolour(HANDLE hConsole, WORD defaultcolour) const;
 
 	template<typename Callable>
