@@ -1,16 +1,14 @@
 #include "GameState.h"
 #include <windows.h>
+#include <algorithm>
 
 constexpr unsigned char c_GridSize = 15;
 
 bool GameState::IsPassable(int x, int y) const
 {
-	for (Unit unit : m_Units) {
-		if (unit.GetX()  == x && unit.GetY() == y) {
-			return false;
-		}
-	}
-	return true;
+	return std::none_of(m_Units.begin(), m_Units.end(), [x, y](const Unit& unit) {
+		return unit.GetX() == x && unit.GetY() == y;
+		});
 }
 
 bool GameState::IsGameOver() const
