@@ -27,7 +27,7 @@ public:
 	Action(int attacker, int defender)
 		: m_X(15), m_Y(15), m_Unit1(attacker), m_Unit2(defender), m_ActionType(Attack), m_UnitType(Prawn) {};
 
-	Action() {};
+	Action() = default;
 
 private:
 	unsigned char m_X;

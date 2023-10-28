@@ -11,6 +11,7 @@ public:
     Action GetAction() const override;
 private:
     GameState m_State;
-    std::vector<Action> getKingThreats(User player) const;
+    std::vector<Action> getKingThreats(User player, const GameState& state) const;
+    Action getSafestMove(const std::vector<Action>& actions) const;
 };
 
