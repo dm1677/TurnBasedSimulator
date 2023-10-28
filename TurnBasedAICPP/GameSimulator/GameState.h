@@ -6,6 +6,7 @@
 #include <array>
 #include <iostream>
 #include <functional>
+#include <windows.h>
 
 struct GameState {
 public:
@@ -38,6 +39,8 @@ private:
 	std::vector<Unit> m_Units;
 	User m_PlayerToMove;
 
+	static constexpr unsigned char c_GridSize = 15;
+
 	void createUnits();
 	std::array<Vec2, 8> getDirectionVectors(Direction direction) const;
 	void addLegalCreateActions(std::vector<Action>& moves) const;
@@ -47,6 +50,15 @@ private:
 	bool isOwnedByPlayerToMove(const Unit& unit) const;
 	bool isResource(const Unit& unit) const;
 	bool canSwap(const Unit& unit1, const Unit& unit2) const;
+	HANDLE getConsoleHandle() const;
+	std::array<std::array<char, c_GridSize>, c_GridSize> getGridRepresentation() const;
+	void initialiseGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const;
+	void placeUnitsOnGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const;
+	void displayGrid(const std::array<std::array<char, c_GridSize>, c_GridSize>& grid, HANDLE hConsole) const;
+	void setUnitColour(HANDLE hConsole, int x, int y, char unitChar) const;
+	WORD getUnitcolour(const Unit& unit) const;
+	WORD getDefaultcolour() const;
+	void restoreDefaultTextcolour(HANDLE hConsole, WORD defaultcolour) const;
 
 	template<typename Callable>
 	void gridLoop(const Callable& logicFunc) const;

@@ -1,8 +1,5 @@
 #include "GameState.h"
-#include <windows.h>
 #include <algorithm>
-
-constexpr unsigned char c_GridSize = 15;
 
 bool GameState::IsPassable(int x, int y) const
 {
@@ -240,62 +237,100 @@ void GameState::PrintUnits() const
 
 void GameState::DrawGrid() const
 {
-	const auto FRIENDLY = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	const auto ENEMY = FOREGROUND_RED | FOREGROUND_INTENSITY;
-	const auto NEUTRAL = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	const auto DEFAULT = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	char grid[c_GridSize][c_GridSize];
+	const auto DEFAULT_colour = getDefaultcolour();
+	HANDLE hConsole = getConsoleHandle();
+	std::array<std::array<char, c_GridSize>, c_GridSize> grid;
 
-	std::cout << std::endl;
+	initialiseGrid(grid);
+	placeUnitsOnGrid(grid);
+	displayGrid(grid, hConsole);
+	restoreDefaultTextcolour(hConsole, DEFAULT_colour);
+}
 
-    gridLoop([&grid](unsigned char x, unsigned char y)
-    {
-        grid[x][y] = '-';
-    });
+std::array<std::array<char, GameState::c_GridSize>, GameState::c_GridSize> GameState::getGridRepresentation() const
+{
+	std::array<std::array<char, c_GridSize>, c_GridSize> grid;
+	initialiseGrid(grid);
+	placeUnitsOnGrid(grid);
+	return grid;
+}
 
-	for (auto &unit : m_Units)
+HANDLE GameState::getConsoleHandle() const
+{
+	return GetStdHandle(STD_OUTPUT_HANDLE);
+}
+
+void GameState::initialiseGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const
+{
+	gridLoop([&grid](unsigned char x, unsigned char y)
+		{
+			grid[x][y] = '-';
+		});
+}
+
+void GameState::placeUnitsOnGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const
+{
+	for (const auto& unit : m_Units)
 	{
+		if (!IsInBounds(unit.GetX(), unit.GetY())) continue;
 		grid[unit.GetX()][unit.GetY()] = unit.GetCharRepresentation();
 	}
+}
+
+void GameState::displayGrid(const std::array<std::array<char, c_GridSize>, c_GridSize>& grid, HANDLE hConsole) const
+{
+	std::cout << std::endl;
 
 	for (int y = 0; y < c_GridSize; y++)
 	{
 		for (int x = 0; x < c_GridSize; x++)
 		{
 			char unitChar = grid[x][y];
-
-			if (unitChar != '-')
-			{
-				const auto& unit = *std::find_if(m_Units.begin(), m_Units.end(),
-					[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
-				switch (unit.GetOwner())
-				{
-				case Player:
-					SetConsoleTextAttribute(hConsole, FRIENDLY);
-					break;
-				case Enemy:
-					SetConsoleTextAttribute(hConsole, ENEMY);
-					break;
-				case Neutral:
-					SetConsoleTextAttribute(hConsole, NEUTRAL);
-					break;
-				default:
-					SetConsoleTextAttribute(hConsole, DEFAULT);
-					break;
-				}
-			}
-			else
-			{
-				SetConsoleTextAttribute(hConsole, DEFAULT);
-			}
-
+			setUnitColour(hConsole, x, y, unitChar);
 			std::cout << unitChar;
 		}
 		std::cout << std::endl;
 	}
+}
 
-	SetConsoleTextAttribute(hConsole, DEFAULT);
+void GameState::setUnitColour(HANDLE hConsole, int x, int y, char unitChar) const
+{
+	if (unitChar != '-')
+	{
+		const auto& unit = *std::find_if(m_Units.begin(), m_Units.end(),
+			[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
+
+		SetConsoleTextAttribute(hConsole, getUnitcolour(unit));
+	}
+	else
+	{
+		SetConsoleTextAttribute(hConsole, getDefaultcolour());
+	}
+}
+
+WORD GameState::getUnitcolour(const Unit& unit) const
+{
+	switch (unit.GetOwner())
+	{
+	case Player:
+		return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	case Enemy:
+		return FOREGROUND_RED | FOREGROUND_INTENSITY;
+	case Neutral:
+		return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	default:
+		return getDefaultcolour();
+	}
+}
+
+WORD GameState::getDefaultcolour() const
+{
+	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+}
+
+void GameState::restoreDefaultTextcolour(HANDLE hConsole, WORD defaultcolour) const
+{
+	SetConsoleTextAttribute(hConsole, defaultcolour);
 }
 
 void GameState::createUnits()
