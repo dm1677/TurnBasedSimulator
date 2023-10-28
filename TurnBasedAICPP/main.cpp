@@ -16,6 +16,8 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false)
 			match.UpdateState(action);
 			if (draw) match.DrawCurrentState();
 		}
+		match.GetCurrentGameState().PrintData();
+		match.PrintData();
 		//match.CreateReplayFile("output/rep.tbr");
 	}
 }

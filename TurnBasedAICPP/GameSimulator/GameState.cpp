@@ -1,4 +1,5 @@
 #include "GameState.h"
+#include <windows.h>
 
 constexpr unsigned char c_GridSize = 15;
 
@@ -32,6 +33,7 @@ int GameState::GetResult() const
 User GameState::GetEnemy() const {
 	if (m_PlayerToMove == Player) { return Enemy; }
 	if (m_PlayerToMove == Enemy) { return Player; }
+	return Neutral;
 }
 
 std::vector<Action> GameState::GetLegalMoves() const {
@@ -51,31 +53,34 @@ std::vector<Action> GameState::GetLegalMoves() const {
 	return moves;
 }
 
-void GameState::gridLoop(std::vector<Action>& moves, LogicFunction logicFunc) const
+template<typename Callable>
+void GameState::gridLoop(const Callable& functionToExecute) const
 {
 	for (unsigned char y = 0; y < c_GridSize; y++)
 		for (unsigned char x = 0; x < c_GridSize; x++)
-			logicFunc(x, y, moves);
+			functionToExecute(x, y);
 }
+
 
 void GameState::addLegalCreateActions(std::vector<Action>& moves) const
 {
 	unsigned char money = GetMoney(m_PlayerToMove);
 	if (money < Unit::GetCost(Gobbo)) return;
 	
-	gridLoop(moves, [this, money](unsigned char x, unsigned char y, std::vector<Action>& innerMoves)
+	gridLoop([this, &moves, money](unsigned char x, unsigned char y)
 		{
 			if (!IsPassable(x, y)) return;
 
-			innerMoves.emplace_back(Gobbo, x, y);
-			if (money >= Unit::GetCost(Prawn))
-				innerMoves.emplace_back(Prawn, x, y);
-			if (money >= Unit::GetCost(Building))
-				innerMoves.emplace_back(Building, x, y);
-			if (money >= Unit::GetCost(Knight))
-				innerMoves.emplace_back(Knight, x, y);
-		});
-	return;
+			const std::array<UnitType, 4> units = { Gobbo, Prawn, Building, Knight };
+
+			for (auto unit : units)
+			{
+				if (money < Unit::GetCost(unit))
+					break;
+
+				moves.emplace_back(unit, x, y);
+			}
+		 });
 }
 
 void GameState::addLegalMoveActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const
@@ -218,8 +223,8 @@ bool GameState::IsInBounds(int x, int y)
 {
 	if (x < 0
 		|| y < 0
-		|| y > 14
-		|| x > 14
+		|| y > c_GridSize-1
+		|| x > c_GridSize-1
 		)
 		return false;
 
@@ -237,17 +242,19 @@ void GameState::PrintUnits() const
 
 void GameState::DrawGrid() const
 {
+	const auto FRIENDLY = FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	const auto ENEMY = FOREGROUND_RED | FOREGROUND_INTENSITY;
+	const auto NEUTRAL = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
+	const auto DEFAULT = FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	char grid[c_GridSize][c_GridSize];
 
 	std::cout << std::endl;
 
-	for (int y = 0; y < c_GridSize; y++)
-	{
-		for (int x = 0; x < c_GridSize; x++)
-		{
-			grid[x][y] = '-';
-		}
-	}
+    gridLoop([&grid](unsigned char x, unsigned char y)
+    {
+        grid[x][y] = '-';
+    });
 
 	for (auto &unit : m_Units)
 	{
@@ -258,10 +265,39 @@ void GameState::DrawGrid() const
 	{
 		for (int x = 0; x < c_GridSize; x++)
 		{
-			std::cout << grid[x][y];
+			char unitChar = grid[x][y];
+
+			if (unitChar != '-')
+			{
+				const auto& unit = *std::find_if(m_Units.begin(), m_Units.end(),
+					[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
+				switch (unit.GetOwner())
+				{
+				case Player:
+					SetConsoleTextAttribute(hConsole, FRIENDLY);
+					break;
+				case Enemy:
+					SetConsoleTextAttribute(hConsole, ENEMY);
+					break;
+				case Neutral:
+					SetConsoleTextAttribute(hConsole, NEUTRAL);
+					break;
+				default:
+					SetConsoleTextAttribute(hConsole, DEFAULT);
+					break;
+				}
+			}
+			else
+			{
+				SetConsoleTextAttribute(hConsole, DEFAULT);
+			}
+
+			std::cout << unitChar;
 		}
 		std::cout << std::endl;
 	}
+
+	SetConsoleTextAttribute(hConsole, DEFAULT);
 }
 
 void GameState::createUnits()
@@ -285,10 +321,9 @@ unsigned char GameState::GetMoney(User user) const
 	return (user == (User)m_Units[0].GetOwner()) ? m_Units[0].GetHealth() : m_Units[1].GetHealth();
 }
 
-void GameState::GetMoveCounts() const
+void GameState::PrintData() const
 {
 	auto moves = GetLegalMoves();
-	std::cout << "Total actions: " << "\n\n" << moves.size();
 
 	int attack = 0;
 	int move = 0;
@@ -302,6 +337,8 @@ void GameState::GetMoveCounts() const
 		if (possibleMove.GetActionType() == Swap) { swap++; }
 	}
 
+	std::cout << "\n\nCurrent State Data\n________________" << std::endl;
+	std::cout << "Total actions: " << moves.size() << std::endl;
 	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create << "\nSwap actions: " << swap << std::endl;
 	std::cout << "\nCurrent Player Money: " << static_cast<int>(GetMoney(GetPlayer())) << "\nOpponent Money: " << static_cast<int>(GetMoney(GetEnemy())) << std::endl;
 }

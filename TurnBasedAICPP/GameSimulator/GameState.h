@@ -29,7 +29,7 @@ public:
 	std::vector<Pos> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit) const;
 
-	void GetMoveCounts() const;
+	void PrintData() const;
 	void PrintUnits() const;
 	void DrawGrid() const;
 
@@ -48,7 +48,7 @@ private:
 	bool isResource(const Unit& unit) const;
 	bool canSwap(const Unit& unit1, const Unit& unit2) const;
 
-	using LogicFunction = std::function<void(unsigned char x, unsigned char y, std::vector<Action>& moves)>;
-	void gridLoop(std::vector<Action>& moves, LogicFunction logicFunc) const;
+	template<typename Callable>
+	void gridLoop(const Callable& logicFunc) const;
 };
 

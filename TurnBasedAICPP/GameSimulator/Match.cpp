@@ -36,3 +36,37 @@ void Match::DrawCurrentState() const
 {
 	m_Simulator.GetCurrentState().DrawGrid();
 }
+
+void Match::PrintData() const
+{
+	int create = 0;
+	int move = 0;
+	int attack = 0;
+	int swap = 0;
+
+	for (const auto& action : m_Actions)
+	{
+		switch (action.GetActionType())
+		{
+		case Create:
+			create++;
+			break;
+		case Move:
+			move++;
+			break;
+		case Attack:
+			attack++;
+			break;
+		case Swap:
+			swap++;
+			break;
+		}
+	}
+
+	std::cout << "\n\nMatch Data\n__________"
+		<< "\nTotal Moves: " << m_Actions.size() << std::endl << std::endl
+		<< "\nCreate actions: " << create
+		<< "\nMove actions: " << move
+		<< "\nAttack actions: " << attack
+		<< "\nSwap actions: " << swap << std::endl;
+}

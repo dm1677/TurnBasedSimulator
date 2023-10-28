@@ -45,7 +45,7 @@ public:
 struct Vec2
 {
 public:
-	Vec2() = default;
+	Vec2() : X(0), Y(0) {}
 	Vec2(int x, int y) : X(x), Y(y) {}
 	int X, Y;
 };
