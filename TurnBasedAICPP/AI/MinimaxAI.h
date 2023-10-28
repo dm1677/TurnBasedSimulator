@@ -1,30 +1,38 @@
 #pragma once
+#include "AI.h"
 #include "../GameSimulator/GameState.h"
 #include "../GameSimulator/Action.h"
 #include <iostream>
 #include <vector>
 
-class MinimaxAI {
+class MinimaxAI
+: public AI {
 public:
-	//AI(GameState board, Action action) :current_state(board), parent_move(action) {};
-	MinimaxAI(GameState* board, Action& action);
-	~MinimaxAI();
-	Action get_move();
+	explicit MinimaxAI(const GameState& state)
+		:m_State(state) {}
+	Action GetMove();
 
 private:
-	int get_evaluation();
-	void populate_actions();
-	void populate_child_nodes();
-	void flush();
+	const GameState& m_State;
 
-	std::vector<MinimaxAI*> children;
-	std::vector<Action> moves;
 
-	Action parent_move;
 
-	int evaluation;
+	class Node {
+	public: 
+		explicit Node(const GameState& state)
+			: m_State(state), m_Evaluation(getEvaluation()) {}
+		int Minimax(int depth, int alpha, int beta, bool maximiser);
+		int GetEvaluation() const { return m_Evaluation; }
+		Action GetBestAction() const { return m_BestAction; }
+	private:
+		const GameState& m_State;
+		std::vector<Action> m_Actions;
+		std::vector<Node> m_Children;
+		int m_Evaluation;
+		Action m_BestAction;
 
-	GameState* current_state;
-
-	int minimax(int, int, int, bool);
+		int getEvaluation() const;
+		void populateActions();
+		void populateChildren();
+	};
 };

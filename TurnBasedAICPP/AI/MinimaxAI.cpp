@@ -1,117 +1,83 @@
 #include "MinimaxAI.h"
-#include <algorithm>
-#include <assert.h>
+#include "../GameSimulator/Simulator.h"
+
 using std::max;
 using std::min;
 
-Action MinimaxAI::get_move() {
-	minimax(2, -2, 2, true);
-	int best = -2;
-	Action best_move(0,0);
-
-	for (uint32_t i = 0; i < children.size(); i++)
-	{
-		if(children[i]->evaluation > best)
-		{
-			best = children[i]->evaluation;
-			best_move = children[i]->parent_move;
-		}
-	}
-
-	flush();
-
-	assert(best_move.GetUnit1() != 0 && best_move.GetUnit2() != 0);
-
-	return best_move;
-}
-
-void MinimaxAI::flush() {
-	children.clear();
-	moves.clear();
-}
-
-int MinimaxAI::minimax(int depth, int alpha, int beta, bool maximiser)
+Action MinimaxAI::GetMove()
 {
-	if (depth == 0) { return get_evaluation(); }
-	populate_actions();
-	if (moves.size() == 0) { return get_evaluation(); }
-	if (current_state->IsGameOver()) { return get_evaluation(); }
-	populate_child_nodes();
+	Node node = Node(m_State);
+	return node.GetBestAction();
+}
+int MinimaxAI::Node::Minimax(int depth, int alpha, int beta, bool maximiser)
+{
+	if (depth == 0 || m_State.IsGameOver()) return getEvaluation();
+	populateActions();
+	if (m_Actions.empty()) return getEvaluation();
+
+	populateChildren();
+
 	if (maximiser)
 	{
-		int best = -2;
-
-		for (unsigned int i = 0; i < children.size(); i++) {
-			//current_state->make_move(children[i]->parent_move);
-
-			best = max(best, children[i]->minimax(depth - 1, alpha, beta, false));
-			
-			//current_state->undo_move();
-
+		int best = INT32_MIN;
+		for (int i = 0; i < m_Children.size(); i++) {
+			auto& childNode = m_Children[i];
+			int childScore = childNode.Minimax(depth - 1, alpha, beta, false);
+			if (childScore > best) {
+				best = childScore;
+				m_BestAction = m_Actions[i];
+			}
 			alpha = max(alpha, best);
 			if (alpha >= beta) break;
 		}
-		
-		evaluation = best;
+		m_Evaluation = best;
 		return best;
 	}
 	else
 	{
-		int best = 2;
-		for (unsigned int i = 0; i < children.size(); i++) {
-			//current_state->make_move(children[i]->parent_move);
-
-			best = min(best, children[i]->minimax(depth - 1, alpha, beta, true));			
-
-			//current_state->undo_move();
-
+		int best = INT32_MAX;
+		for (int i = 0; i < m_Children.size(); i++) {
+			auto& childNode = m_Children[i];
+			int childScore = childNode.Minimax(depth - 1, alpha, beta, true);
+			if (childScore < best) {
+				best = childScore;
+				m_BestAction = m_Actions[i];
+			}
 			beta = min(beta, best);
 			if (beta <= alpha) break;
 		}
-		
-		evaluation = best;
+		m_Evaluation = best;
 		return best;
 	}
 }
 
-int MinimaxAI::get_evaluation() {
-	User result = (User)current_state->GetResult();
+int MinimaxAI::Node::getEvaluation() const
+{
+	if ((User)m_State.GetResult() == m_State.GetPlayer()) return INT32_MAX;
+	if ((User)m_State.GetResult() == m_State.GetEnemy())  return INT32_MIN;
 
-	switch (result)
+	int playerKingHealthPool = 0;
+	int enemyKingHealthPool = 0;
+	const auto& kings = m_State.GetKings();
+	for (const auto& king : kings)
 	{
-	case Neutral:
-		return 0;
-	case Enemy:
-		return 1;
-	case Player:
-		return -1;
-	default:
-		return 0;
+		if (king.GetOwner() == m_State.GetPlayer()) playerKingHealthPool += king.GetHealth();
+		if (king.GetOwner() == m_State.GetEnemy())  enemyKingHealthPool  += king.GetHealth();
 	}
+
+	return playerKingHealthPool - enemyKingHealthPool;
 }
 
-void MinimaxAI::populate_actions() {
-	moves = current_state->GetLegalMoves();
+void MinimaxAI::Node::populateActions()
+{
+	m_Actions = m_State.GetLegalMoves();
 }
 
-void MinimaxAI::populate_child_nodes() {//fix
-	for (unsigned i = 0; i < moves.size(); i++)
+void MinimaxAI::Node::populateChildren()
+{
+	for (const auto& action : m_Actions)
 	{
-		//GameState new_board(current_state, moves[i]);
-
-		MinimaxAI* new_ai = new MinimaxAI(current_state, moves[i]);
-		children.push_back(new_ai);
-	}
-}
-
-MinimaxAI::MinimaxAI(GameState *board, Action &action) {
-	current_state = board;
-	parent_move = action;	
-}
-
-MinimaxAI::~MinimaxAI() {
-	for (auto child : children)
-	{
-		delete child;
+		Simulator simulator(m_State, action);
+		m_Children.emplace_back(Node(simulator.GenerateNewState(action)));
 	}
 }
