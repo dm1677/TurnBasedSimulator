@@ -1,11 +1,12 @@
 #include <iostream>
 #include "GameSimulator/GameState.h"
 #include "AI/RandomAI.h"
+#include "AI/RulesAI.h"
 #include "GameSimulator/Match.h"
 #include <chrono>
 #include <ctime>
 
-void simulate(int matchCount, int movesPerMatch, bool draw = false)
+void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDebugInfo = false)
 {
 	for (int j = 0; j < matchCount; j++) {
 		Match match;
@@ -16,15 +17,17 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false)
 			match.UpdateState(action);
 			if (draw) match.DrawCurrentState();
 		}
-		match.GetCurrentGameState().PrintData();
-		match.PrintData();
-		//match.CreateReplayFile("output/rep.tbr");
+		if (printDebugInfo)
+		{
+			match.GetCurrentGameState().PrintData();
+			match.PrintData();
+		}
 	}
 }
 
 int main()
 {
-	simulate(1, 100, true);
-
+	simulate(1, 100, true, true);
+	
 	system("pause>0");
 }

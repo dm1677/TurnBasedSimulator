@@ -34,11 +34,17 @@ Action RulesAI::GetAction() const
 	}
 
 	auto friendlyAttacks = std::vector<Action>();
-	for (const auto& unit : units)
-		if (unit.GetOwner() == m_State.GetPlayer())
-			break;//friendlyAttacks.emplace_back(m_State.GetAttacks(unit));
+	for (int unit = 2; unit < units.size(); unit++)
+	{
+		if (units[unit].GetOwner() == m_State.GetPlayer())
+		{
+			const auto& attacks = m_State.GetAttacks(units[unit]);
+			for (const auto attackedUnit : attacks)
+				friendlyAttacks.emplace_back(Attack, unit, attackedUnit, 0, 0, Prawn);
+		}
+	}
 	
-	auto attacksOnPlayerKing = getKingThreats(m_State.GetEnemy(), m_State);
+	const auto& attacksOnPlayerKing = getKingThreats(m_State.GetEnemy(), m_State);
 	for (const auto& attack : attacksOnPlayerKing)
 	{
 		const auto& enemyUnit = units[attack.GetUnit1()];
@@ -96,11 +102,11 @@ Action RulesAI::GetAction() const
 			else
 			{
 				auto friendlyGobbos = std::vector<int>();
-				for (int i = 0; i < units.size(); i++)
+				for (int k = 2; k < units.size(); k++)
 				{
-					const auto& unit = units[i];
+					const auto& unit = units[k];
 					if (unit.GetUnitType() == Gobbo && unit.GetOwner() == m_State.GetPlayer())
-						friendlyGobbos.push_back(i);
+						friendlyGobbos.push_back(k);
 				}
 				for (const auto& vector : diagonalVectors)
 				{
@@ -126,12 +132,12 @@ std::vector<Action> RulesAI::getKingThreats(User player, const GameState& state)
 {
 	std::vector<Action> kingAttacks;
 	auto units = state.GetUnitData();
-	for (const auto& unit : units)
+	for (int i = 2; i < units.size(); i++)
 	{
-		if (unit.GetOwner() != player) continue;
-		auto allAttacks = state.GetAttacks(unit);
+		if (units[i].GetOwner() != player) continue;
+		auto allAttacks = state.GetAttacks(units[i]);
 		for (const auto& attack : allAttacks)
-			if (attack >= 2 || attack <= 5) kingAttacks.emplace_back();//kingAttacks.emplace_back(Attack, unit, attack);
+			if (attack >= 2 || attack <= 5) kingAttacks.emplace_back(Attack, i, attack);
 	}
 	return kingAttacks;
 }

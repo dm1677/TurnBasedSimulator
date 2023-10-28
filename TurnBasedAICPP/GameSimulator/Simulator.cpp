@@ -24,7 +24,7 @@ GameState Simulator::GenerateNewState(const Action& action)
 		break;
 	}
 
-	if (!success) return m_State;
+	if (!success) exit(44994);
 	m_Units[m_State.GetEnemy()].SetHealth(m_Units[m_State.GetEnemy()].GetHealth() + 1);
 	m_State = GameState(m_Units, m_State.GetEnemy());
 	return m_State;
