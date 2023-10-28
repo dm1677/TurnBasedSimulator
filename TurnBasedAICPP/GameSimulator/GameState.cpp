@@ -150,28 +150,26 @@ std::array<Vec2, 8> GameState::getDirectionVectors(Direction direction) const
 
 std::vector<Pos> GameState::GetMovement(const Unit &unit) const
 {
-	int speed = unit.GetSpeed();
+	const int speed = unit.GetSpeed();
 	std::vector<Pos> moves;
 
 	if (speed == 0) { return moves; }
 
-	Pos currentPosition(unit.GetX(), unit.GetY());
+	const Pos currentPosition(unit.GetX(), unit.GetY());
 
-	std::array<Vec2, 8> vectors = getDirectionVectors(unit.GetDirection());
+	const std::array<Vec2, 8> vectors = getDirectionVectors(unit.GetDirection());
 
-	for (auto k = 0; k < vectors.size(); k++)
-	{
-		for (auto i = 1; i <= speed; i++)
-		{
-			const int x = currentPosition.X + (i * vectors[k].X);
-			const int y = currentPosition.Y + (i * vectors[k].Y);
+	std::for_each(vectors.begin(), vectors.end(), [this, currentPosition, speed, &moves](const auto& vector) {
+		for (int i = 1; i <= speed; ++i) {
+			const int x = currentPosition.X + (i * vector.X);
+			const int y = currentPosition.Y + (i * vector.Y);
 
 			if (!IsInBounds(x, y) || !IsPassable(x, y))
 				break;
 
 			moves.emplace_back(x, y);
 		}
-	}
+		});
 
 	return moves;
 }
