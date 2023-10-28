@@ -330,7 +330,8 @@ void GameState::PrintData() const
 	int create = 0;
 	int swap = 0;
 
-	for (auto const& possibleMove : moves) {
+	for (auto const& possibleMove : moves)
+	{
 		if (possibleMove.GetActionType() == Attack) { attack++; }
 		if (possibleMove.GetActionType() == Create) { create++; }
 		if (possibleMove.GetActionType() == Move) { move++; }
@@ -341,4 +342,20 @@ void GameState::PrintData() const
 	std::cout << "Total actions: " << moves.size() << std::endl;
 	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create << "\nSwap actions: " << swap << std::endl;
 	std::cout << "\nCurrent Player Money: " << static_cast<int>(GetMoney(GetPlayer())) << "\nOpponent Money: " << static_cast<int>(GetMoney(GetEnemy())) << std::endl;
+	
+	//Subtractions exclude resource unit
+	int totalUnits = m_Units.size() - 2;
+	int friendly = -1;
+	int enemy = -1;
+	int neutral = 0;
+
+	for (auto const& unit : m_Units)
+	{
+		if (unit.GetOwner() == Player) friendly++;
+		if (unit.GetOwner() == Enemy) enemy++;
+		if (unit.GetOwner() == Neutral) neutral++;
+	}
+
+	std::cout << "\n\nTotal units: " << totalUnits << "   Non-neutral: " << totalUnits - neutral << std::endl;
+	std::cout << "Friendly: " << friendly << "   Enemy: " << enemy << "   Neutral: " << neutral << std::endl;
 }
