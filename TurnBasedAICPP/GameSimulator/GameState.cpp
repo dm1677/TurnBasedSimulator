@@ -1,5 +1,7 @@
 #include "GameState.h"
 
+constexpr unsigned char c_GridSize = 15;
+
 bool GameState::IsPassable(int x, int y) const
 {
 	for (Unit unit : m_Units) {
@@ -35,48 +37,84 @@ User GameState::GetEnemy() const {
 std::vector<Action> GameState::GetLegalMoves() const {
 
 	std::vector<Action> moves;
-	unsigned char money = GetMoney(m_PlayerToMove);
+	addLegalCreateActions(moves);
 	
-	if (money >= 3)
-	{
-		for (unsigned char  y = 0; y < 15; y++)
-		{
-			for (unsigned char x = 0; x < 15; x++)
-			{
-				if (!IsPassable(x, y)) continue;
-
-				moves.emplace_back(Gobbo, x, y);
-				if (money >= 5)
-					moves.emplace_back(Prawn, x, y);
-				if (money >= 8)
-					moves.emplace_back( Building, x, y );
-				if (money >= 12)
-					moves.emplace_back(Knight, x, y );
-			}
-		}
-	}
-	
-	for (uint32_t i = 0; i < m_Units.size(); i++) {
-		if (m_Units[i].GetOwner() != (int)m_PlayerToMove) continue;
-		if (m_Units[i].GetUnitType() == (int)Resource) continue;
+	for (uint32_t i = 2; i < m_Units.size(); i++) {
+		const auto& unit = m_Units[i];
+		if (!isOwnedByPlayerToMove(unit)) continue;
 		
-		for (const auto &move : GetMovement(m_Units[i]))
-			moves.emplace_back(i, move.X, move.Y);
-
-		for (const auto &attack : GetAttacks(m_Units[i]))
-			moves.emplace_back(i, attack);
-
-		if (m_Units[i].GetUnitType() == Prawn)
-		{
-			for (uint32_t j = 0; j < m_Units.size(); j++)
-			{
-				if (m_Units[j].GetOwner() == m_Units[i].GetOwner() && m_Units[j].GetSpeed() > 0 && i != j)
-					moves.emplace_back(Swap, i, j, 0, 0, Prawn);
-			}
-		}
+		addLegalMoveActions(moves, unit, i);
+		addLegalAttackActions(moves, unit, i);
+		addLegalSwapActions(moves, unit, i);
 	}
 	
 	return moves;
+}
+
+void GameState::gridLoop(std::vector<Action>& moves, LogicFunction logicFunc) const
+{
+	for (unsigned char y = 0; y < c_GridSize; y++)
+		for (unsigned char x = 0; x < c_GridSize; x++)
+			logicFunc(x, y, moves);
+}
+
+void GameState::addLegalCreateActions(std::vector<Action>& moves) const
+{
+	unsigned char money = GetMoney(m_PlayerToMove);
+	if (money < Unit::GetCost(Gobbo)) return;
+	
+	gridLoop(moves, [this, money](unsigned char x, unsigned char y, std::vector<Action>& innerMoves)
+		{
+			if (!IsPassable(x, y)) return;
+
+			innerMoves.emplace_back(Gobbo, x, y);
+			if (money >= Unit::GetCost(Prawn))
+				innerMoves.emplace_back(Prawn, x, y);
+			if (money >= Unit::GetCost(Building))
+				innerMoves.emplace_back(Building, x, y);
+			if (money >= Unit::GetCost(Knight))
+				innerMoves.emplace_back(Knight, x, y);
+		});
+	return;
+}
+
+void GameState::addLegalMoveActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const
+{
+	for (const auto& move : GetMovement(unit))
+		moves.emplace_back(unitIndex, move.X, move.Y);
+}
+
+void GameState::addLegalAttackActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const
+{
+	for (const auto& attack : GetAttacks(unit))
+		moves.emplace_back(unitIndex, attack);
+}
+
+void GameState::addLegalSwapActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const
+{
+	if (unit.GetUnitType() != Prawn) return;
+
+	for (uint32_t swappedUnit = 0; swappedUnit < m_Units.size(); swappedUnit++)
+		if (unitIndex != swappedUnit && canSwap(unit, m_Units[swappedUnit]))
+			moves.emplace_back(Swap, unitIndex, swappedUnit, 0, 0, Prawn);
+}
+
+bool GameState::isOwnedByPlayerToMove(const Unit& unit) const
+{
+	return unit.GetOwner() == m_PlayerToMove;
+}
+
+bool GameState::isResource(const Unit& unit) const
+{
+	return unit.GetUnitType() == Resource;
+}
+
+bool GameState::canSwap(const Unit& unit1, const Unit& unit2) const
+{
+	return (unit1.GetUnitType() == Prawn) 
+		&& (unit1.GetOwner() == unit2.GetOwner())
+		&& (unit2.GetOwner() != Neutral)
+		&& (!isResource(unit2));
 }
 
 std::array<Vec2, 8> GameState::getDirectionVectors(Direction direction) const
@@ -199,13 +237,13 @@ void GameState::PrintUnits() const
 
 void GameState::DrawGrid() const
 {
-	char grid[15][15];
+	char grid[c_GridSize][c_GridSize];
 
 	std::cout << std::endl;
 
-	for (int y = 0; y < 15; y++)
+	for (int y = 0; y < c_GridSize; y++)
 	{
-		for (int x = 0; x < 15; x++)
+		for (int x = 0; x < c_GridSize; x++)
 		{
 			grid[x][y] = '-';
 		}
@@ -216,9 +254,9 @@ void GameState::DrawGrid() const
 		grid[unit.GetX()][unit.GetY()] = unit.GetCharRepresentation();
 	}
 
-	for (int y = 0; y < 15; y++)
+	for (int y = 0; y < c_GridSize; y++)
 	{
-		for (int x = 0; x < 15; x++)
+		for (int x = 0; x < c_GridSize; x++)
 		{
 			std::cout << grid[x][y];
 		}
@@ -255,13 +293,15 @@ void GameState::GetMoveCounts() const
 	int attack = 0;
 	int move = 0;
 	int create = 0;
+	int swap = 0;
 
 	for (auto const& possibleMove : moves) {
 		if (possibleMove.GetActionType() == Attack) { attack++; }
 		if (possibleMove.GetActionType() == Create) { create++; }
 		if (possibleMove.GetActionType() == Move) { move++; }
+		if (possibleMove.GetActionType() == Swap) { swap++; }
 	}
 
-	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create;
-	std::cout << "\nMoney: " << GetMoney(GetPlayer()) << std::endl;
+	std::cout << "\n\nAttack actions: " << attack << "\nMove actions: " << move << "\nCreate actions: " << create << "\nSwap actions: " << swap << std::endl;
+	std::cout << "\nCurrent Player Money: " << static_cast<int>(GetMoney(GetPlayer())) << "\nOpponent Money: " << static_cast<int>(GetMoney(GetEnemy())) << std::endl;
 }

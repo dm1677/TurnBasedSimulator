@@ -5,6 +5,7 @@
 #include <vector>
 #include <array>
 #include <iostream>
+#include <functional>
 
 struct GameState {
 public:
@@ -39,5 +40,15 @@ private:
 
 	void createUnits();
 	std::array<Vec2, 8> getDirectionVectors(Direction direction) const;
+	void addLegalCreateActions(std::vector<Action>& moves) const;
+	void addLegalMoveActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const;
+	void addLegalAttackActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const;
+	void addLegalSwapActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const;
+	bool isOwnedByPlayerToMove(const Unit& unit) const;
+	bool isResource(const Unit& unit) const;
+	bool canSwap(const Unit& unit1, const Unit& unit2) const;
+
+	using LogicFunction = std::function<void(unsigned char x, unsigned char y, std::vector<Action>& moves)>;
+	void gridLoop(std::vector<Action>& moves, LogicFunction logicFunc) const;
 };
 
