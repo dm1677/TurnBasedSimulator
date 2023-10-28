@@ -29,6 +29,7 @@ public:
 	std::vector<Action> GetLegalMoves() const;
 	std::vector<Pos> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit) const;
+	std::vector<int> GetThreats(const Unit& unit) const;
 
 	void PrintData() const;
 	void PrintUnits() const;
