@@ -108,8 +108,6 @@ void MinimaxAI::Node::populateChildren()
 	for (const auto& action : m_Actions)
 	{
 		Simulator simulator(*m_State, *action);
-		auto state = simulator.GenerateNewState(*action);
-		auto ptr = std::make_unique<Node>(state);
-		m_Children.emplace_back(std::move(ptr));
+		m_Children.emplace_back(std::make_unique<Node>(simulator.GenerateNewState(*action)));
 	}
 }
