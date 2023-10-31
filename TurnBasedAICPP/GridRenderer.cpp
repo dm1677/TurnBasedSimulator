@@ -34,16 +34,14 @@ void GridRenderer::setUnitColour(HANDLE hConsole, int x, int y, char unitChar) c
 {
 	if (unitChar != '-')
 	{
-		auto& units = m_State.GetUnitData();
+		const auto& units = m_State.GetUnitData();
 		const auto& unit = *std::find_if(units.begin(), units.end(),
 			[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
 
 		SetConsoleTextAttribute(hConsole, getUnitcolour(unit));
 	}
 	else
-	{
 		SetConsoleTextAttribute(hConsole, c_ForegroundColour);
-	}
 }
 
 WORD GridRenderer::getUnitcolour(const Unit& unit) const
