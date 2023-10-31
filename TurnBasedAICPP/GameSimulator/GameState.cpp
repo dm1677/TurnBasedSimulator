@@ -233,29 +233,12 @@ void GameState::PrintUnits() const
 	}
 }
 
-void GameState::DrawGrid() const
-{
-	const auto defaultColour = getDefaultColour();
-	HANDLE hConsole = getConsoleHandle();
-	std::array<std::array<char, c_GridSize>, c_GridSize> grid;
-
-	initialiseGrid(grid);
-	placeUnitsOnGrid(grid);
-	displayGrid(grid, hConsole);
-	restoreDefaultTextcolour(hConsole, defaultColour);
-}
-
-std::array<std::array<char, GameState::c_GridSize>, GameState::c_GridSize> GameState::getGridRepresentation() const
+std::array<std::array<char, GameState::c_GridSize>, GameState::c_GridSize> GameState::GetGridRepresentation() const
 {
 	std::array<std::array<char, c_GridSize>, c_GridSize> grid;
 	initialiseGrid(grid);
 	placeUnitsOnGrid(grid);
 	return grid;
-}
-
-HANDLE GameState::getConsoleHandle() const
-{
-	return GetStdHandle(STD_OUTPUT_HANDLE);
 }
 
 void GameState::initialiseGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const
@@ -275,60 +258,10 @@ void GameState::placeUnitsOnGrid(std::array<std::array<char, c_GridSize>, c_Grid
 	}
 }
 
-void GameState::displayGrid(const std::array<std::array<char, c_GridSize>, c_GridSize>& grid, HANDLE hConsole) const
+
+const Unit& GameState::GetUnit(int index) const
 {
-	std::cout << std::endl;
-
-	for (int y = 0; y < c_GridSize; y++)
-	{
-		for (int x = 0; x < c_GridSize; x++)
-		{
-			char unitChar = grid[x][y];
-			setUnitColour(hConsole, x, y, unitChar);
-			std::cout << unitChar;
-		}
-		std::cout << std::endl;
-	}
-}
-
-void GameState::setUnitColour(HANDLE hConsole, int x, int y, char unitChar) const
-{
-	if (unitChar != '-')
-	{
-		const auto& unit = *std::find_if(m_Units.begin(), m_Units.end(),
-			[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
-
-		SetConsoleTextAttribute(hConsole, getUnitcolour(unit));
-	}
-	else
-	{
-		SetConsoleTextAttribute(hConsole, getDefaultColour());
-	}
-}
-
-WORD GameState::getUnitcolour(const Unit& unit) const
-{
-	switch (unit.GetOwner())
-	{
-	case Player:
-		return FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	case Enemy:
-		return FOREGROUND_RED | FOREGROUND_INTENSITY;
-	case Neutral:
-		return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_INTENSITY;
-	default:
-		return getDefaultColour();
-	}
-}
-
-WORD GameState::getDefaultColour() const
-{
-	return FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE;
-}
-
-void GameState::restoreDefaultTextcolour(HANDLE hConsole, WORD defaultcolour) const
-{
-	SetConsoleTextAttribute(hConsole, defaultcolour);
+	return m_Units[index];
 }
 
 void GameState::createUnits()

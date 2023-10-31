@@ -1,5 +1,6 @@
 #include "Match.h"
 #include "../Serialiser.h"
+#include "../GridRenderer.h"
 
 void Match::UpdateState(const Action& action)
 {
@@ -34,7 +35,10 @@ void Match::PlayReplayFromFile(const std::string& filename, bool drawState)
 
 void Match::DrawCurrentState() const
 {
-	m_Simulator.GetCurrentState().DrawGrid();
+	GridRenderer renderer(m_Simulator.GetCurrentState());
+	renderer.DrawGrid();
+
+	//m_Simulator.GetCurrentState().DrawGrid();
 }
 
 void Match::PrintData() const

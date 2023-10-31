@@ -6,7 +6,6 @@
 #include <array>
 #include <iostream>
 #include <functional>
-#include <windows.h>
 
 struct GameState {
 public:
@@ -15,6 +14,8 @@ public:
 		m_PlayerToMove = Player;
 	};
 	explicit GameState(const std::vector<Unit>& units, User player) : m_Units(units), m_PlayerToMove(player) {};
+
+	static constexpr unsigned char c_GridSize = 15;
 
 	User GetPlayer() const { return m_PlayerToMove; }
 	User GetEnemy() const;
@@ -32,14 +33,16 @@ public:
 
 	void PrintData() const;
 	void PrintUnits() const;
-	void DrawGrid() const;
 
+	const Unit& GetUnit(int index) const;
 	std::vector<Unit> GetUnitData() const { return m_Units; }
+
+	std::array<std::array<char, c_GridSize>, c_GridSize> GetGridRepresentation() const;
+
 private:
 	std::vector<Unit> m_Units;
 	User m_PlayerToMove;
 
-	static constexpr unsigned char c_GridSize = 15;
 
 	void createUnits();
 	std::array<Vec2, 8> getDirectionVectors(Direction direction) const;
@@ -50,15 +53,9 @@ private:
 	bool isOwnedByPlayerToMove(const Unit& unit) const;
 	bool isResource(const Unit& unit) const;
 	bool canSwap(const Unit& unit1, const Unit& unit2) const;
-	HANDLE getConsoleHandle() const;
-	std::array<std::array<char, c_GridSize>, c_GridSize> getGridRepresentation() const;
+	
 	void initialiseGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const;
 	void placeUnitsOnGrid(std::array<std::array<char, c_GridSize>, c_GridSize>& grid) const;
-	void displayGrid(const std::array<std::array<char, c_GridSize>, c_GridSize>& grid, HANDLE hConsole) const;
-	void setUnitColour(HANDLE hConsole, int x, int y, char unitChar) const;
-	WORD getUnitcolour(const Unit& unit) const;
-	WORD getDefaultColour() const;
-	void restoreDefaultTextcolour(HANDLE hConsole, WORD defaultcolour) const;
 
 	template<typename Callable>
 	void gridLoop(const Callable& logicFunc) const;
