@@ -6,7 +6,7 @@
 #include <array>
 #include <iostream>
 #include <functional>
-#include <windows.h>
+#include <Windows.h>
 
 struct GameState {
 public:
