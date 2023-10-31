@@ -37,8 +37,6 @@ void Match::DrawCurrentState() const
 {
 	GridRenderer renderer(m_Simulator.GetCurrentState());
 	renderer.DrawGrid();
-
-	//m_Simulator.GetCurrentState().DrawGrid();
 }
 
 void Match::PrintData() const

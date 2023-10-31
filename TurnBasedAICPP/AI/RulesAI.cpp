@@ -26,7 +26,7 @@
 Action RulesAI::GetAction() const
 {
 	auto attacksOnEnemyKing = getKingThreats(m_State.GetPlayer(), m_State);
-	auto units = m_State.GetUnitData();
+	auto& units = m_State.GetUnitData();
 	for (const auto& attack : attacksOnEnemyKing)
 	{
 		if (units[attack.GetUnit1()].GetDamage() >= units[attack.GetUnit2()].GetHealth())
@@ -131,7 +131,7 @@ Action RulesAI::GetAction() const
 std::vector<Action> RulesAI::getKingThreats(User player, const GameState& state) const
 {
 	std::vector<Action> kingAttacks;
-	auto units = state.GetUnitData();
+	auto& units = state.GetUnitData();
 	for (int i = 2; i < units.size(); i++)
 	{
 		if (units[i].GetOwner() != player) continue;

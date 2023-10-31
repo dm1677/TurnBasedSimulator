@@ -35,7 +35,8 @@ public:
 	void PrintUnits() const;
 
 	const Unit& GetUnit(int index) const;
-	std::vector<Unit> GetUnitData() const { return m_Units; }
+	std::vector<Unit> CopyUnitData() const { return m_Units; }
+	const std::vector<Unit>& GetUnitData() const { return m_Units; }
 
 	std::array<std::array<char, c_GridSize>, c_GridSize> GetGridRepresentation() const;
 

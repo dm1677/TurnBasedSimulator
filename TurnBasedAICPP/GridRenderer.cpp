@@ -34,8 +34,7 @@ void GridRenderer::setUnitColour(HANDLE hConsole, int x, int y, char unitChar) c
 {
 	if (unitChar != '-')
 	{
-		//TODO: Change such that no copy is made
-		auto units = m_State.GetUnitData();
+		auto& units = m_State.GetUnitData();
 		const auto& unit = *std::find_if(units.begin(), units.end(),
 			[x, y](const Unit& u) { return u.GetX() == x && u.GetY() == y; });
 
