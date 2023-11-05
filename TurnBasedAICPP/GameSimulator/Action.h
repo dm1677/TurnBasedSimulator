@@ -29,6 +29,16 @@ public:
 
 	Action() = default;
 
+	bool operator==(const Action& other) const
+	{
+		return m_X == other.m_X
+			&& m_Y == other.m_Y
+			&& m_Unit1 == other.m_Unit1
+			&& m_Unit2 == other.m_Unit2
+			&& m_ActionType == other.m_ActionType
+			&& m_UnitType == other.m_UnitType;
+	}
+
 private:
 	unsigned char m_X;
 	unsigned char m_Y;

@@ -7,3 +7,5 @@ TurnBasedAICPP/Debug/
 TurnBasedAICPP/TurnBasedAICPP.vcxproj
 TurnBasedAICPP/TurnBasedAICPP.vcxproj.user
 TurnBasedAICPP/TurnBasedAICPP.vcxproj.filters
+x64/
+TurnBasedAICPP/x64
