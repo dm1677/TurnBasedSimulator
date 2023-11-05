@@ -30,10 +30,10 @@ public:
 	Action() = default;
 
 private:
-	unsigned char m_X : 4;
-	unsigned char m_Y : 4;
-	unsigned int m_Unit1 : 8;
-	unsigned int m_Unit2 : 8;
-	ActionType m_ActionType : 3;
-	UnitType m_UnitType : 3;
+	unsigned char m_X;
+	unsigned char m_Y;
+	unsigned int m_Unit1;
+	unsigned int m_Unit2;
+	ActionType m_ActionType;
+	UnitType m_UnitType;
 };
