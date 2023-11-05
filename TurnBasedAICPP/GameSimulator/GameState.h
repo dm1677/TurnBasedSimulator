@@ -31,6 +31,8 @@ public:
 	std::vector<Pos> GetMovement(const Unit &unit) const;
 	std::vector<int> GetAttacks(const Unit &unit) const;	
 
+	std::array<Unit, 4> GetKings() const;
+
 	void PrintData() const;
 	void PrintUnits() const;
 

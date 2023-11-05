@@ -212,6 +212,15 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 	return attackActions;
 }
 
+std::array<Unit, 4> GameState::GetKings() const
+{
+	std::array<Unit, 4> kings = { { m_Units[2], m_Units[3], m_Units[4], m_Units[5]} };
+	for (int i = 0; i < kings.size(); i++)
+		if (kings[i].GetUnitType() != King)
+			kings[i] = Unit(15, 15, 0, 0, Neutral);
+	return kings;
+}
+
 bool GameState::IsInBounds(int x, int y)
 {
 	if (x < 0

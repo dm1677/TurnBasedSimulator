@@ -2,6 +2,7 @@
 #include "GameSimulator/GameState.h"
 #include "AI/RandomAI.h"
 #include "AI/RulesAI.h"
+#include "AI/MinimaxAI.h"
 #include "GameSimulator/Match.h"
 #include <chrono>
 #include <ctime>
@@ -12,8 +13,8 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 		Match match;
 		for (int i = 0; i < movesPerMatch; i++) {
 			auto state = match.GetCurrentGameState();
-			RandomAI randomAI(state);
-			auto action = randomAI.GetAction();
+			MinimaxAI AI(state);
+			auto action = AI.GetAction();
 			match.UpdateState(action);
 			if (draw) match.DrawCurrentState();
 		}
@@ -27,7 +28,7 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 
 int main()
 {
-	simulate(1, 100, true, true);
+	simulate(1, 10, true, true);
 	
 	system("pause>0");
 }

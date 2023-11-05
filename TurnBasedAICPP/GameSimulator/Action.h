@@ -32,8 +32,8 @@ public:
 private:
 	unsigned char m_X;
 	unsigned char m_Y;
-	int m_Unit1;
-	int m_Unit2;
+	unsigned int m_Unit1;
+	unsigned int m_Unit2;
 	ActionType m_ActionType;
 	UnitType m_UnitType;
 };
