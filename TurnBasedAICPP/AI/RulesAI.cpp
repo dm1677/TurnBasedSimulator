@@ -145,6 +145,6 @@ std::vector<Action> RulesAI::getKingThreats(User player, const GameState& state)
 Action RulesAI::getSafestMove(const std::vector<Action>& actions) const
 {
 	for (const auto& action : actions)
-		if (getKingThreats(m_State.GetPlayer(), Simulator(m_State, action).GetCurrentState()).empty()) return action;
+		//if (getKingThreats(m_State.GetPlayer(), Simulator(m_State, action).GetCurrentState()).empty()) return action;
 	return Action(Swap, 0, 0, 0, 0, Prawn);
 }
