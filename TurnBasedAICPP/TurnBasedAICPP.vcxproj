@@ -163,6 +163,7 @@
     <ClCompile Include="Serialiser.cpp" />
     <ClCompile Include="GameSimulator\Simulator.cpp" />
     <ClCompile Include="GameSimulator\Unit.cpp" />
+    <ClCompile Include="TestManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSimulator\Action.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="Serialiser.h" />
     <ClInclude Include="GameSimulator\Simulator.h" />
     <ClInclude Include="GameSimulator\Unit.h" />
+    <ClInclude Include="TestManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,6 +5,7 @@
 #include "AI/MinimaxAI.h"
 #include "AI/MCTSAI.h"
 #include "GameSimulator/Match.h"
+#include "TestManager.h"
 #include <chrono>
 #include <ctime>
 
@@ -172,10 +173,13 @@ int main()
 	
 	//fork_test();
 	
-	for (int i = 0; i < 10; i++)
-		fork_test2();
+	//for (int i = 0; i < 10; i++)
+	//	fork_test2();
 	//knight_test();
 	//knight_corner_test();
+
+	TestManager test;
+	test.RunTests();
 	
 	std::cout << "\n\nDone.";
 	system("pause>0");

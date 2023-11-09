@@ -51,6 +51,9 @@
     <ClCompile Include="AI\MCTSAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.h">
@@ -90,6 +93,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AI\MCTSAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

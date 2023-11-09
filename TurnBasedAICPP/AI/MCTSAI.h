@@ -54,7 +54,7 @@ private:
         Node* GetWorstChild(double explorationConstant) const
         {
             Node* best = nullptr;
-            double bestValue = std::numeric_limits<double>::max();
+            double bestValue = std::numeric_limits<double>::infinity();
 
             for (auto child : m_Children)
             {
