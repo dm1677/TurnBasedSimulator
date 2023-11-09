@@ -2,7 +2,7 @@
 
 void TestManager::RunTests() const
 {
-	const int attempts = 15;
+	const int attempts = 30;
 	int successes = 0;
 	for (int i = 0; i < attempts; i++)
 	{
