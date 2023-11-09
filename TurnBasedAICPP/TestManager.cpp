@@ -6,13 +6,13 @@ void TestManager::RunTests() const
 	int successes = 0;
 	for (int i = 0; i < attempts; i++)
 	{
-		if (knight_corner())
+		if (weighted_king_fork())
 			successes++;
 		else
 			std::cout << "Test failed." << std::endl;
 	}
 
-	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 10 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
+	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 100 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
 }
 
 bool TestManager::knight_OHK() const
@@ -111,6 +111,14 @@ bool TestManager::king_fork() const
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
 	renderer.DrawGrid();
+
+	auto correctActions = std::array<Action, 7>();
+	for (int i = 0; i < 7; i++)
+		correctActions[i] = Action(Building, i + 1, 14);
+
+	for (auto& a : correctActions)
+		if (action == a) return true;
+	return false;
 }
 
 bool TestManager::weighted_king_fork() const
@@ -131,6 +139,14 @@ bool TestManager::weighted_king_fork() const
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
 	renderer.DrawGrid();
+
+	auto correctActions = std::array<Action, 7>();
+	for (int i = 0; i < 7; i++)
+		correctActions[i] = Action(Building, i + 1, 14);
+
+	for (auto& a : correctActions)
+		if (action == a) return true;
+	return false;
 }
 
 bool TestManager::knight_corner() const

@@ -72,86 +72,6 @@ void sim3(int matchCount)
 	}
 }
 
-void knight_test()
-{
-	std::vector<Unit> units;
-
-	units.emplace_back(15, 15, 0, Resource, Player);
-	units.emplace_back(15, 15, 0, Resource, Enemy);
-	units.emplace_back(0, 0, 40, King, Player);
-	units.emplace_back(0, 14, 40, King, Enemy);
-	units.emplace_back(0, 1, Unit::GetMaxHealth(Knight), Knight, Enemy);
-
-	GameState state(units, Player);
-	Simulator simulator(state, Action());
-
-	MCTSAI AI(state);
-	auto action = AI.GetAction();
-	simulator.GenerateNewState(action);
-	GridRenderer renderer(simulator.GetCurrentState());
-	renderer.DrawGrid();
-}
-
-void fork_test()
-{
-	std::vector<Unit> units;
-
-	units.emplace_back(15, 15, 8, Resource, Player);
-	units.emplace_back(15, 15, 0, Resource, Enemy);
-	units.emplace_back(0, 0, 40, King, Player);
-	units.emplace_back(14, 0, 40, King, Player);
-	units.emplace_back(0, 14, 40, King, Enemy);
-	units.emplace_back(8, 14, 40, King, Enemy);
-
-	GameState state(units, Player);
-	Simulator simulator(state, Action());
-
-	MCTSAI AI(state);
-	auto action = AI.GetAction();
-	simulator.GenerateNewState(action);
-	GridRenderer renderer(simulator.GetCurrentState());
-	renderer.DrawGrid();
-}
-
-void fork_test2()
-{
-	std::vector<Unit> units;
-
-	units.emplace_back(15, 15, 8, Resource, Player);
-	units.emplace_back(15, 15, 0, Resource, Enemy);
-	units.emplace_back(0, 0, 40, King, Player);
-	units.emplace_back(0, 14, 40, King, Enemy);
-	units.emplace_back(8, 14, 40, King, Enemy);
-
-	GameState state(units, Player);
-	Simulator simulator(state, Action());
-
-	MCTSAI AI(state);
-	auto action = AI.GetAction();
-	simulator.GenerateNewState(action);
-	GridRenderer renderer(simulator.GetCurrentState());
-	renderer.DrawGrid();
-}
-
-void knight_corner_test()
-{
-	std::vector<Unit> units;
-
-	units.emplace_back(15, 15, 12, Resource, Player);
-	units.emplace_back(15, 15, 0, Resource, Enemy);
-	units.emplace_back(0, 0, 40, King, Player);
-	units.emplace_back(0, 14, 40, King, Enemy);
-
-	GameState state(units, Player);
-	Simulator simulator(state, Action());
-
-	MCTSAI AI(state);
-	auto action = AI.GetAction();
-	simulator.GenerateNewState(action);
-	GridRenderer renderer(simulator.GetCurrentState());
-	renderer.DrawGrid();
-}
-
 void replay()
 {
 	Match match;
@@ -161,23 +81,6 @@ void replay()
 
 int main()
 {
-	//simulate(1, 10, true, true);
-	
-	//sim2();
-
-	//fork_test2();
-
-	//sim3(12);
-
-	//replay();
-	
-	//fork_test();
-	
-	//for (int i = 0; i < 10; i++)
-	//	fork_test2();
-	//knight_test();
-	//knight_corner_test();
-
 	TestManager test;
 	test.RunTests();
 	
