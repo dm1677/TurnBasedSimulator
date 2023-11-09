@@ -15,9 +15,11 @@ public:
 private:
     GameState m_State;
     class Node;
-    int simulate(const GameState& state) const;
+    double simulate(const GameState& state) const;
     void backpropagate(Node* node, double result) const;
-    int getEvaluation(User player, const GameState& state) const;
+    void safeBackpropagate(Node* node, double result) const;
+    void simAndBackprop(Node* node) const;
+    double getEvaluation(User player, const GameState& state) const;
 
     class Node
     {
@@ -41,26 +43,49 @@ private:
                 auto uct = getUCTScore(child, explorationConstant);
                 if (uct > bestValue)
                 {
+                    //if (explorationConstant == 0.0 && child->GetVisits() < 5) continue;
                     bestValue = uct;
                     best = child;
                 }
             }
             return best;
         }
+
+        Node* GetWorstChild(double explorationConstant) const
+        {
+            Node* best = nullptr;
+            double bestValue = std::numeric_limits<double>::max();
+
+            for (auto child : m_Children)
+            {
+                auto uct = getUCTScore(child, explorationConstant);
+                if (uct < bestValue)
+                {
+                    bestValue = uct;
+                    best = child;
+                }
+            }
+            return best;
+        }
+
         Node* Expand()
         {
-            Action action = GetRandomAction(m_UntriedMoves);
-            m_UntriedMoves.erase(std::remove(m_UntriedMoves.begin(), m_UntriedMoves.end(), action)); //TODO: figure out a better solution
+            //Action action = GetRandomAction(m_UntriedMoves);
+            //m_UntriedMoves.erase(std::remove(m_UntriedMoves.begin(), m_UntriedMoves.end(), action)); //TODO: figure out a better solution
+
+            Action action = m_UntriedMoves.back();
+            m_UntriedMoves.pop_back();
+
             Simulator simulator(m_State, action);
             auto newState = simulator.GenerateNewState(action);
             auto childNode = new Node(newState, action, this);
             m_Children.push_back(childNode);
             return childNode;
         }
-        int GetWins() const { return m_Wins; }
+        double GetWins() const { return m_Wins; }
         int GetVisits() const { return m_Visits; }
         void IncrementVisits() { m_Visits++; }
-        void UpdateWins(int wins) { m_Wins += wins; }
+        void UpdateWins(double wins) { m_Wins += wins; }
         Node* GetParent() const { return m_Parent; }
         const GameState& GetState() const { return m_State; }
         Action GetAction() const { return m_Action; }
@@ -70,7 +95,7 @@ private:
         Node* m_Parent;
         std::vector<Node*> m_Children;
         int m_Visits = 0;
-        int m_Wins = 0;
+        double m_Wins = 0;
         std::vector<Action> m_UntriedMoves;
 
         inline double getUCTScore(const Node* node, double c) const

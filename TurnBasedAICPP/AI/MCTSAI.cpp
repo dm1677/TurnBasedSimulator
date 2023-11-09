@@ -2,19 +2,28 @@
 #include "../Enums.h"
 #include <chrono>
 #include <random>
+#include <thread>
+#include <mutex>
 
-static const int c_Iterations = 100;
+std::mutex nodeMutex;
+
+static const int c_Iterations = 10000;
 Action MCTSAI::GetAction() const
 {
     Node* root = new Node(m_State, Action());
     
     for (int i = 0; i < c_Iterations; i++)
     {
+        /*if (i % 50 == 0)
+            std::cout << "\nIteration " << i << "/" << c_Iterations << std::endl;*/
         Node* node = root;
 
         while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
         {
-            node = node->GetBestChild(sqrt(2));
+            if (m_State.GetPlayer() == node->GetState().GetPlayer())
+                node = node->GetBestChild(sqrt(2));
+            else
+                node = node->GetWorstChild(sqrt(2));
         }
 
         if (!node->IsFullyExpanded() && !node->GetState().IsGameOver())
@@ -22,9 +31,13 @@ Action MCTSAI::GetAction() const
             node = node->Expand();
         }
 
-        auto result = simulate(node->GetState());
+        std::thread t1(&MCTSAI::simAndBackprop, this, node);
+        std::thread t2(&MCTSAI::simAndBackprop, this, node);
+        std::thread t3(&MCTSAI::simAndBackprop, this, node);
 
-        backpropagate(node, result);
+        t1.join();
+        t2.join();
+        t3.join();
     }
 
     Node* bestNode = root->GetBestChild(0.0);
@@ -33,15 +46,16 @@ Action MCTSAI::GetAction() const
     return bestMove;
 }
 
-int MCTSAI::simulate(const GameState& state) const
+double MCTSAI::simulate(const GameState& state) const
 {
     //auto start = std::chrono::high_resolution_clock::now();
     
     //-------------------------------------------------------------------------------
-    static int shallow = 0;
+    //static int shallow = 0;
     int i = 0;
+    int depth = 50;
     Simulator simulator(state, Action());
-    while(!simulator.GetCurrentState().IsGameOver() && i < 3000)
+    while(!simulator.GetCurrentState().IsGameOver() && i < depth)
     {
         std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
         simulator.GenerateNewState(GetRandomAction(actions));
@@ -53,11 +67,12 @@ int MCTSAI::simulate(const GameState& state) const
     //auto stop = std::chrono::high_resolution_clock::now();
     //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
     //std::cout << "Simulation performed " << i << " actions in " << duration.count() << " milliseconds." << std::endl;
-    if (i < 3000)
-    {
-        shallow++;
-        std::cout << "\nShallow tree #" << shallow << std::endl;
-    }
+
+    //if (i < depth)
+    //{
+    //    shallow++;
+    //    std::cout << "\nShallow tree #" << shallow  << " - Depth: " << i << std::endl;
+    //}
 
     const auto& finalState = simulator.GetCurrentState();
     if (finalState.IsGameOver())
@@ -70,7 +85,7 @@ int MCTSAI::simulate(const GameState& state) const
         return getEvaluation(m_State.GetPlayer(), finalState);
 }
 
-int MCTSAI::getEvaluation(User player, const GameState& state) const
+double MCTSAI::getEvaluation(User player, const GameState& state) const
 {
     int playerKingHealthPool = 0;
     int enemyKingHealthPool = 0;
@@ -83,10 +98,10 @@ int MCTSAI::getEvaluation(User player, const GameState& state) const
         else if (king.GetOwner() != Neutral)
             enemyKingHealthPool += king.GetHealth();
     }
-    auto diff = playerKingHealthPool - enemyKingHealthPool;
-    if (diff > 0) return 1;
-    if (diff < 0) return -1;
-    return 0;
+    return (playerKingHealthPool - enemyKingHealthPool) / 100.0;
+    //if (diff > 0) return 1;
+    //if (diff < 0) return -1;
+    //return 0;
 }
 
 void MCTSAI::backpropagate(Node* node, double result) const
@@ -99,6 +114,13 @@ void MCTSAI::backpropagate(Node* node, double result) const
     }
 }
 
+
+void MCTSAI::safeBackpropagate(Node* node, double result) const
+{
+    std::lock_guard<std::mutex> lock(nodeMutex);
+    backpropagate(node, result);
+}
+
 Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
 {
     if (actions.empty()) return Action();
@@ -108,4 +130,9 @@ Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
 
     int randomNumber = dist(rng);
     return actions[randomNumber];
+}
+
+void MCTSAI::simAndBackprop(Node* node) const
+{
+    safeBackpropagate(node, simulate(node->GetState()));
 }

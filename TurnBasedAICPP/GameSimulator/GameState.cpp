@@ -10,9 +10,9 @@ bool GameState::IsPassable(int x, int y) const
 
 bool GameState::IsGameOver() const
 {
-	if (m_Units[4].GetUnitType() == King) { return false; }
-	if (m_Units[3].GetUnitType() != King) { return true; }
-	if (m_Units[2].GetOwner() != m_Units[3].GetOwner()) { return false; }
+	if (m_Units.size() > 4 && m_Units[4].GetUnitType() == King) { return false; }
+	if (m_Units.size() > 3 && m_Units[3].GetUnitType() != King) { return true; }
+	if (m_Units.size() > 3 && m_Units[2].GetOwner() != m_Units[3].GetOwner()) { return false; }
 
 	return true;
 }
@@ -41,8 +41,8 @@ std::vector<Action> GameState::GetLegalMoves() const {
 		if (!isOwnedByPlayerToMove(unit)) continue;
 		
 		addLegalMoveActions(moves, unit, i);
-		addLegalAttackActions(moves, unit, i);
 		addLegalSwapActions(moves, unit, i);
+		addLegalAttackActions(moves, unit, i);
 	}
 	
 	return moves;
