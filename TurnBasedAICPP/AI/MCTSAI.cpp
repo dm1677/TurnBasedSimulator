@@ -40,8 +40,10 @@ Action MCTSAI::GetAction() const
         t3.join();
     }
 
-    Node* bestNode = root->GetBestChild(0.0);
+    const Node* bestNode = root->GetBestChild(0.0);
     Action bestMove = bestNode->GetAction();
+    std::cout << "Last state: " << root->GetWins() << " score, " << root->GetVisits() << " visits." << std::endl;
+    std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << " visits." << std::endl;
     delete root;
     return bestMove;
 }
@@ -78,8 +80,8 @@ double MCTSAI::simulate(const GameState& state) const
     if (finalState.IsGameOver())
     {
         if (m_State.GetPlayer() == finalState.GetResult())
-            return 1;
-        else return -1;
+            return 1000;
+        else return -1000;
     }
     else
         return getEvaluation(m_State.GetPlayer(), finalState);
