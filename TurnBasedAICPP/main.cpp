@@ -151,8 +151,10 @@ void mtSim() {
 	Action bestAction;
 	bool actionReady = false;
 
-	while (true) {
-		if (aiThreadNotRunning && !match.GetCurrentGameState().IsGameOver()) {
+	while (!match.IsGameOver())
+	{
+		if (aiThreadNotRunning && !match.GetCurrentGameState().IsGameOver())
+		{
 			std::thread aiThread(&getBestMove, std::ref(match), std::ref(bestAction), std::ref(actionReady));
 			aiThread.detach();
 			aiThreadNotRunning = false;
@@ -174,6 +176,15 @@ void mtSim() {
 		updateUI(renderer, match);
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
+
+	std::cout << "End of game." << std::endl;
+	match.CreateReplayFile();
+
+	while (true)
+	{
+		updateUI(renderer, match);
+		std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	}
 }
 
 void playReplay(const std::string& filename)
@@ -182,17 +193,10 @@ void playReplay(const std::string& filename)
 	Match match;
 	match.LoadReplayFromFile(filename);
 
-	while (!match.GetCurrentGameState().IsGameOver())
-	{
-		if (renderer.IsRightPressed())
-		{
-			match.AdvanceReplay();
-		}
-		updateUI(renderer, match);
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	}
 	while (true)
 	{
+		if (!match.GetCurrentGameState().IsGameOver() && renderer.IsRightPressed())
+			match.AdvanceReplay();
 		updateUI(renderer, match);
 		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	}
@@ -204,7 +208,7 @@ int main()
 	test.RunTests();*/
 
 	//mtSim();
-	//playReplay("FirstAIBattle.tbr");
+	playReplay("FirstAIBattle.tbr");
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

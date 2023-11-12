@@ -14,6 +14,7 @@ public:
 	const GameState& GetCurrentGameState() const { return m_Simulator.GetCurrentState(); }
 	void DrawCurrentState() const;
 	void PrintData() const;
+	bool IsGameOver() const { return m_Simulator.GetCurrentState().IsGameOver(); }
 private:
 	std::vector<Action> m_Actions;
 	Simulator m_Simulator;
