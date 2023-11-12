@@ -43,6 +43,7 @@ enum class ActionCategory
 	Move,
 	Swap,
 	AttackOnKing,
+	KingAttack,
 	KingMove,
 	ThreatOnKing,
 	KingEscape,

@@ -131,7 +131,7 @@ void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 	}
 	else {
 		//std::cout << "Getting player 2's move..." << std::endl;
-		action = RandomAI(match.GetCurrentGameState(), true).GetAction();
+		action = MCTSAI(match.GetCurrentGameState()).GetAction();
 	}
 
 	std::lock_guard<std::mutex> lock(mu);
@@ -207,8 +207,8 @@ int main()
 	/*TestManager test;
 	test.RunTests();*/
 
-	mtSim();
-	//playReplay("replay.tbr");
+	//tSim();
+	playReplay("replay.tbr");
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

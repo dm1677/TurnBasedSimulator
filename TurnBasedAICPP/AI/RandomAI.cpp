@@ -61,6 +61,8 @@ ActionCategory RandomAI::categoriseAction(const Action& action) const
 	case Attack:
 		if (m_State.GetUnit(action.GetUnit2()).GetUnitType() == King)
 			return ActionCategory::AttackOnKing;
+		else if (m_State.GetUnit(action.GetUnit1()).GetUnitType() == King)
+			return ActionCategory::KingAttack;
 		else
 			return ActionCategory::Attack;
 		break;
@@ -104,12 +106,13 @@ Action RandomAI::getSemirandomAction() const
 	std::map<ActionCategory, double> c_Weights =
 	{
 		{ActionCategory::Create, 1},
-		{ActionCategory::Move, 80},
-		{ActionCategory::Attack, 1500},
-		{ActionCategory::Swap, 60},
-		{ActionCategory::AttackOnKing, 5000},
+		{ActionCategory::Move, 60},
+		{ActionCategory::Attack, 400},
+		{ActionCategory::Swap, 40},
+		{ActionCategory::AttackOnKing, 5500},
 		{ActionCategory::KingMove, 120},
-		{ActionCategory::ThreatOnKing, 2000},
+		{ActionCategory::KingAttack, 200},
+		{ActionCategory::ThreatOnKing, 800},
 		{ActionCategory::KingEscape, 4500},
 		{ActionCategory::MoveIntoDamage, 10},
 		{ActionCategory::None, 0}
