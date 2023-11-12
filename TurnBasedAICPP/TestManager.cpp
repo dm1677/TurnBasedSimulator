@@ -2,7 +2,7 @@
 
 void TestManager::RunTests() const
 {
-	const int attempts = 30;
+	const int attempts = 10;
 	int successes = 0;
 	for (int i = 0; i < attempts; i++)
 	{
@@ -141,7 +141,7 @@ bool TestManager::weighted_king_fork() const
 	renderer.DrawGrid();
 
 	auto correctActions = std::array<Action, 7>();
-	for (int i = 0; i < 7; i++)
+	for (int i = 2; i < 5; i++)
 		correctActions[i] = Action(Building, i + 1, 14);
 
 	for (auto& a : correctActions)

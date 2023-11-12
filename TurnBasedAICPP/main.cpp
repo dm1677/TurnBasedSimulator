@@ -229,12 +229,12 @@ void mtSim() {
 
 int main()
 {
-	//TestManager test;
-	//test.RunTests();
+	TestManager test;
+	test.RunTests();
 	
 	//sim2();
 
-	mtSim();
+	//mtSim();
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

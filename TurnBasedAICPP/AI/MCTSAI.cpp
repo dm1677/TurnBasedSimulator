@@ -21,9 +21,9 @@ Action MCTSAI::GetAction() const
         while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
         {
             if (m_State.GetPlayer() == node->GetState().GetPlayer())
-                node = node->GetBestChild(sqrt(2));
+                node = node->GetBestChild(0.1 * sqrt(2));
             else
-                node = node->GetWorstChild(sqrt(2));
+                node = node->GetWorstChild(0.1*sqrt(2));
         }
 
         if (!node->IsFullyExpanded() && !node->GetState().IsGameOver())
