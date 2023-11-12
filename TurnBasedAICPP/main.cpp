@@ -26,11 +26,9 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 	for (int j = 0; j < matchCount; j++) {
 		Match match;
 
-		match.UpdateState(Action(Create, 0, 0, 13, 13, Gobbo));
-
 		for (int i = 0; i < movesPerMatch; i++) {
 			auto state = match.GetCurrentGameState();
-			MCTSAI AI(state);
+			RandomAI AI(state);
 			auto action = AI.GetAction();
 			match.UpdateState(action);
 			if (draw) match.DrawCurrentState();
@@ -41,6 +39,38 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 			}
 		}
 	}
+}
+#include <numeric>
+template <typename T>
+double getAverage(const std::vector<T>& vec) {
+	if (vec.empty()) {
+		return 0.0; // Handle the case of an empty vector
+	}
+	// Calculate the sum of the vector's elements
+	T sum = std::accumulate(vec.begin(), vec.end(), static_cast<T>(0));
+	// Calculate the average by dividing sum by the number of elements
+	return static_cast<double>(sum) / vec.size();
+}
+
+void simulateFull(int matchCount)
+{
+	std::vector<long long> moveTimes;
+	moveTimes.reserve(matchCount*1000);
+	for (int j = 0; j < matchCount; j++) {
+		Match match;
+
+		while(!match.IsGameOver())
+		{
+			auto start = std::chrono::high_resolution_clock::now();
+			RandomAI AI(match.GetCurrentGameState(), true);
+			match.UpdateState(AI.GetAction());
+			auto stop = std::chrono::high_resolution_clock::now();
+			auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+			moveTimes.push_back(duration.count());
+		}
+	}
+	auto avg = getAverage(moveTimes);
+	std::cout << "Average time per move: " << avg << "ms" << std::endl;
 }
 
 Action getPlayerMove(const GameState& state) {
@@ -127,7 +157,7 @@ void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 
 	if (i % 2 == 0) {
 		//std::cout << "Getting player 1's move..." << std::endl;
-		action = RandomAI(match.GetCurrentGameState(), true).GetAction();
+		action = RandomAI(match.GetCurrentGameState(), false).GetAction();
 	}
 	else {
 		//std::cout << "Getting player 2's move..." << std::endl;
@@ -204,11 +234,12 @@ void playReplay(const std::string& filename)
 
 int main()
 {
-	/*TestManager test;
-	test.RunTests();*/
+	TestManager test;
+	test.RunTests();
 
-	//tSim();
-	playReplay("replay.tbr");
+	//mtSim();
+	//playReplay("replay.tbr");	
+	//simulateFull(100);
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

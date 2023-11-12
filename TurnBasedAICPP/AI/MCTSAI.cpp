@@ -7,7 +7,7 @@
 
 std::mutex nodeMutex;
 
-static const int c_Iterations = 10000;
+static const int c_Iterations = 2500;
 Action MCTSAI::GetAction() const
 {
     Node* root = new Node(m_State, Action());
@@ -31,25 +31,22 @@ Action MCTSAI::GetAction() const
             node = node->Expand();
         }
 
-        std::thread t1(&MCTSAI::simAndBackprop, this, node);
-        std::thread t2(&MCTSAI::simAndBackprop, this, node);
-        std::thread t3(&MCTSAI::simAndBackprop, this, node);
-        std::thread t4(&MCTSAI::simAndBackprop, this, node);
+        std::vector<std::thread> threads;
+        for (int j = 0; j < std::thread::hardware_concurrency(); j++)
+            threads.emplace_back(&MCTSAI::simAndBackprop, this, node);
 
-        t1.join();
-        t2.join();
-        t3.join();
-        t4.join();
+        for (auto& thread : threads)
+            thread.join();
     }
 
     const Node* bestNode = root->GetBestChild(0.0);
     Action bestMove = bestNode->GetAction();
-    std::cout << "Last state: " << root->GetWins() << " score, " << root->GetVisits() << " visits." << std::endl;
-    std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << " visits." << std::endl;
+    std::cout << "Cumulative evaluation: " << root->GetWins() << std::endl;
+    std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << "/" << root->GetVisits() << " visits." << std::endl;
     delete root;
     return bestMove;
 }
-
+#include "RandomAI.h"
 double MCTSAI::simulate(const GameState& state) const
 {
     //auto start = std::chrono::high_resolution_clock::now();
@@ -57,12 +54,12 @@ double MCTSAI::simulate(const GameState& state) const
     //-------------------------------------------------------------------------------
     //static int shallow = 0;
     int i = 0;
-    int depth = 50;
+    int depth = 20;
     Simulator simulator(state, Action());
     while(!simulator.GetCurrentState().IsGameOver() && i < depth)
     {
         std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
-        simulator.GenerateNewState(GetRandomAction(actions));
+        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), true).GetAction());
         i++;
     }
 

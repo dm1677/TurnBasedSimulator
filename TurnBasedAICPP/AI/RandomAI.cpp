@@ -1,6 +1,6 @@
 #include "RandomAI.h"
 #include <random>
-#include <map>
+#include <unordered_map>
 
 Action RandomAI::GetAction() const
 {
@@ -103,13 +103,13 @@ ActionCategory RandomAI::categoriseAction(const Action& action) const
 
 Action RandomAI::getSemirandomAction() const
 {
-	std::map<ActionCategory, double> c_Weights =
+	std::unordered_map<ActionCategory, double> c_Weights =
 	{
 		{ActionCategory::Create, 1},
 		{ActionCategory::Move, 60},
 		{ActionCategory::Attack, 400},
 		{ActionCategory::Swap, 40},
-		{ActionCategory::AttackOnKing, 5500},
+		{ActionCategory::AttackOnKing, 10000},
 		{ActionCategory::KingMove, 120},
 		{ActionCategory::KingAttack, 200},
 		{ActionCategory::ThreatOnKing, 800},
@@ -121,10 +121,11 @@ Action RandomAI::getSemirandomAction() const
 	auto actions = m_State.GetLegalMoves();
 
 	std::vector<double> c_DistributionWeights;
+	c_DistributionWeights.reserve(actions.size());
 	for (const auto& action : actions)
 	{
 		ActionCategory category = categoriseAction(action);
-		c_DistributionWeights.push_back(c_Weights[category]);
+		c_DistributionWeights.emplace_back(c_Weights[category]);
 	}
 
 	std::random_device rd;
