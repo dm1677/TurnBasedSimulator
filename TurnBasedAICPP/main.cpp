@@ -131,7 +131,7 @@ void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 	}
 	else {
 		//std::cout << "Getting player 2's move..." << std::endl;
-		action = RandomAI(match.GetCurrentGameState()).GetAction();
+		action = MCTSAI(match.GetCurrentGameState()).GetAction();
 	}
 
 	std::lock_guard<std::mutex> lock(mu);
@@ -176,12 +176,35 @@ void mtSim() {
 	}
 }
 
+void playReplay(const std::string& filename)
+{
+	WindowRenderer renderer;
+	Match match;
+	match.LoadReplayFromFile(filename);
+
+	while (!match.GetCurrentGameState().IsGameOver())
+	{
+		if (renderer.IsRightPressed())
+		{
+			match.AdvanceReplay();
+		}
+		updateUI(renderer, match);
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	}
+	while (true)
+	{
+		updateUI(renderer, match);
+		std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	}
+}
+
 int main()
 {
-	TestManager test;
-	test.RunTests();
+	/*TestManager test;
+	test.RunTests();*/
 
 	//mtSim();
+	//playReplay("FirstAIBattle.tbr");
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

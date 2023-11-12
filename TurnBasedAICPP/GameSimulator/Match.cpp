@@ -33,6 +33,29 @@ void Match::PlayReplayFromFile(const std::string& filename, bool drawState)
 	}
 }
 
+void Match::LoadReplayFromFile(const std::string& filename)
+{
+	if (!m_Actions.empty()) return;
+
+	Serialiser serialiser;
+	m_Actions = std::move(serialiser.ReadReplayFile(filename));
+	if (m_Actions.empty())
+	{
+		std::cout << "Error loading replay file." << std::endl;
+		return;
+	}
+	m_ReplayAction = m_Actions.begin();
+}
+
+void Match::AdvanceReplay()
+{
+	if (m_ReplayAction != m_Actions.end())
+	{
+		m_Simulator.GenerateNewState(*m_ReplayAction);
+		++m_ReplayAction;
+	}
+}
+
 void Match::DrawCurrentState() const
 {
 	GridRenderer renderer(m_Simulator.GetCurrentState());

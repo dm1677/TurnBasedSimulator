@@ -15,13 +15,21 @@ Window::Window(int width, int height, const std::string& title)
     m_Sprites.reserve(250);
 }
 
-void Window::Run() const
+void Window::Run()
 {
     sf::Event event;
     while (m_Window->pollEvent(event))
     {
         if (event.type == sf::Event::Closed)
             m_Window->close();
+        if (event.type == sf::Event::KeyPressed)
+        {
+            if (event.key.scancode == sf::Keyboard::Scancode::Right)
+                m_RightPressed = true;
+        }
+        if (event.type == sf::Event::KeyReleased)
+            if (event.key.scancode == sf::Keyboard::Scancode::Right)
+                m_RightPressed = false;
     }
 
     m_Window->clear();
