@@ -121,27 +121,23 @@ void printinfo(const GameState& state)
 	std::cout << "Player 2 Money: " << static_cast<unsigned int>(playerTwoMoney) << std::endl << std::endl;
 }
 
-void getBestMove(Match& match) {
+void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 	static int i = 0;
+	Action action;
 
-	if (i % 2 == 0)
-	{
-		std::cout << "Getting player 1's move..." << std::endl;
-		Action action = MCTSAI(match.GetCurrentGameState()).GetAction();
-		match.UpdateState(action);
-		printinfo(match.GetCurrentGameState());
+	if (i % 2 == 0) {
+		//std::cout << "Getting player 1's move..." << std::endl;
+		action = MCTSAI(match.GetCurrentGameState()).GetAction();
 	}
-	else
-	{
-		std::cout << "Getting player 2's move..." << std::endl;
-		Action action = MCTSAI(match.GetCurrentGameState()).GetAction();
-		match.UpdateState(action);
-		printinfo(match.GetCurrentGameState());
-		//match.UpdateState(getPlayerMove(match.GetCurrentGameState()));
+	else {
+		//std::cout << "Getting player 2's move..." << std::endl;
+		action = MCTSAI(match.GetCurrentGameState()).GetAction();
 	}
-	i++;
+
 	std::lock_guard<std::mutex> lock(mu);
-	moveReady = true;
+	bestAction = action; // Update the action to be used by the main thread
+	actionReady = true; // Signal that the action is ready
+	i++;
 }
 
 void sim2()
@@ -200,33 +196,33 @@ void updateUI(WindowRenderer& renderer, const Match& match) {
 	renderer.OnFrame();
 }
 
-void mtSim()
-{
+void mtSim() {
 	WindowRenderer renderer;
 	Match match;
+	Action bestAction;
+	bool actionReady = false;
+
 	while (true) {
 		if (aiThreadNotRunning && !match.GetCurrentGameState().IsGameOver()) {
-			std::thread aiThread(&getBestMove, std::ref(match));
-			aiThread.detach(); // Let the AI thread run independently
+			std::thread aiThread(&getBestMove, std::ref(match), std::ref(bestAction), std::ref(actionReady));
+			aiThread.detach();
 			aiThreadNotRunning = false;
 		}
-
-		//Put window event handling here
 
 		// Check if the AI has completed its move
 		{
 			std::lock_guard<std::mutex> lock(mu);
-			if (moveReady) {
-				moveReady = false;
-				aiThreadNotRunning = true;
+			if (actionReady) {
+				match.UpdateState(bestAction); // Update the game state with the AI's move
+				//printinfo(match.GetCurrentGameState()); // Now safe to print the game state
 				updateUI(renderer, match); // Update the UI with the new move
+				actionReady = false;
+				aiThreadNotRunning = true;
 			}
 		}
 
 		// Render the current state
 		updateUI(renderer, match);
-
-		// Sleep for a short duration to prevent maxing out the CPU
 		std::this_thread::sleep_for(std::chrono::milliseconds(10));
 	}
 }
