@@ -6,7 +6,7 @@ void TestManager::RunTests() const
 	int successes = 0;
 	for (int i = 0; i < attempts; i++)
 	{
-		if (weighted_king_fork())
+		if (knight_escape())
 			successes++;
 		else
 			std::cout << "Test failed." << std::endl;
@@ -113,7 +113,7 @@ bool TestManager::king_fork() const
 	renderer.DrawGrid();
 
 	auto correctActions = std::array<Action, 7>();
-	for (int i = 0; i < 7; i++)
+	for (int i = 2; i < 5; i++)
 		correctActions[i] = Action(Building, i + 1, 14);
 
 	for (auto& a : correctActions)

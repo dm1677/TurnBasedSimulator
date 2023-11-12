@@ -131,64 +131,13 @@ void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 	}
 	else {
 		//std::cout << "Getting player 2's move..." << std::endl;
-		action = MCTSAI(match.GetCurrentGameState()).GetAction();
+		action = RandomAI(match.GetCurrentGameState()).GetAction();
 	}
 
 	std::lock_guard<std::mutex> lock(mu);
 	bestAction = action; // Update the action to be used by the main thread
 	actionReady = true; // Signal that the action is ready
 	i++;
-}
-
-void sim2()
-{
-	Match match;
-	int turn = 0;
-
-	WindowRenderer renderer;
-
-	//match.DrawCurrentState();
-	while (!match.GetCurrentGameState().IsGameOver())
-	{
-		if (turn % 2 == 0)
-		{
-			MCTSAI AI(match.GetCurrentGameState());
-			std::cout << "AI 1 Move:" << std::endl;
-			match.UpdateState(AI.GetAction());
-		}
-		else
-		{
-			MCTSAI AI(match.GetCurrentGameState());
-			match.UpdateState(AI.GetAction());
-			std::cout << "AI 2 Move:" << std::endl;
-		}
-		//match.DrawCurrentState();
-		renderer.RenderState(match.GetCurrentGameState());
-		renderer.OnFrame();
-		turn++;
-	}
-	match.PrintData();
-	match.CreateReplayFile("FirstAIBattle.tbr");
-}
-
-void sim3(int matchCount)
-{
-	for (int j = 0; j < matchCount; j++) {
-		Match match;
-
-		while (!match.GetCurrentGameState().IsGameOver()) {
-			MCTSAI AI(match.GetCurrentGameState());
-			match.UpdateState(AI.GetAction());
-		}
-		match.CreateReplayFile(std::to_string(j) + ".tbr");
-	}
-}
-
-void replay()
-{
-	Match match;
-	match.PlayReplayFromFile("3.rep", true);
-	match.PrintData();
 }
 
 void updateUI(WindowRenderer& renderer, const Match& match) {
@@ -231,8 +180,6 @@ int main()
 {
 	TestManager test;
 	test.RunTests();
-	
-	//sim2();
 
 	//mtSim();
 

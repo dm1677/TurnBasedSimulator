@@ -21,9 +21,9 @@ Action MCTSAI::GetAction() const
         while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
         {
             if (m_State.GetPlayer() == node->GetState().GetPlayer())
-                node = node->GetBestChild(0.1 * sqrt(2));
+                node = node->GetBestChild(sqrt(2));
             else
-                node = node->GetWorstChild(0.1*sqrt(2));
+                node = node->GetWorstChild(sqrt(2));
         }
 
         if (!node->IsFullyExpanded() && !node->GetState().IsGameOver())
@@ -34,10 +34,12 @@ Action MCTSAI::GetAction() const
         std::thread t1(&MCTSAI::simAndBackprop, this, node);
         std::thread t2(&MCTSAI::simAndBackprop, this, node);
         std::thread t3(&MCTSAI::simAndBackprop, this, node);
+        std::thread t4(&MCTSAI::simAndBackprop, this, node);
 
         t1.join();
         t2.join();
         t3.join();
+        t4.join();
     }
 
     const Node* bestNode = root->GetBestChild(0.0);
@@ -100,6 +102,7 @@ double MCTSAI::getEvaluation(User player, const GameState& state) const
         else if (king.GetOwner() != Neutral)
             enemyKingHealthPool += king.GetHealth();
     }
+
     return (playerKingHealthPool - enemyKingHealthPool) / 100.0;
     //if (diff > 0) return 1;
     //if (diff < 0) return -1;
