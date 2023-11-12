@@ -35,6 +35,21 @@ enum FileType {
 	Text
 };
 
+enum class ActionCategory
+{
+	None,
+	Create,
+	Attack,
+	Move,
+	Swap,
+	AttackOnKing,
+	KingMove,
+	ThreatOnKing,
+	KingEscape,
+	MoveIntoDamage
+};
+
+
 struct Pos
 {
 public:

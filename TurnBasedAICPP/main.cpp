@@ -180,11 +180,11 @@ void mtSim() {
 	std::cout << "End of game." << std::endl;
 	match.CreateReplayFile();
 
-	while (true)
-	{
-		updateUI(renderer, match);
-		std::this_thread::sleep_for(std::chrono::milliseconds(10));
-	}
+	//while (true)
+	//{
+	//	updateUI(renderer, match);
+	//	std::this_thread::sleep_for(std::chrono::milliseconds(10));
+	//}
 }
 
 void playReplay(const std::string& filename)
@@ -208,7 +208,7 @@ int main()
 	test.RunTests();*/
 
 	mtSim();
-	//playReplay("FirstAIBattle.tbr");
+	//playReplay("replay.tbr");
 
 	std::cout << "\n\nDone.";
 	system("pause>0");
