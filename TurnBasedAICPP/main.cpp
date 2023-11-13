@@ -13,7 +13,7 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 		Match match;
 		for (int i = 0; i < movesPerMatch; i++) {
 			auto state = match.GetCurrentGameState();
-			MinimaxAI AI(state);
+			RandomAI AI(state);
 			auto action = AI.GetAction();
 			match.UpdateState(action);
 			if (draw) match.DrawCurrentState();

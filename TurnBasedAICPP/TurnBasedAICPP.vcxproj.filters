@@ -45,6 +45,9 @@
     <ClCompile Include="AI\RulesAI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="GridRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enums.h">
@@ -78,6 +81,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="AI\RulesAI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GridRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
