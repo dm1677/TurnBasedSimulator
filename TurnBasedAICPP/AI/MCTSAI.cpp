@@ -1,21 +1,42 @@
 #include "MCTSAI.h"
+#include "RandomAI.h"
 #include "../Enums.h"
 #include <chrono>
 #include <random>
 #include <thread>
 #include <mutex>
+#include <algorithm>
 
 std::mutex nodeMutex;
 
 static const int c_Iterations = 2500;
+static const int c_Depth = 20;
+
 Action MCTSAI::GetAction() const
 {
+    if (!m_TreeSearch)
+    {
+        auto moves = m_State.GetLegalMoves();
+        auto scores = std::vector<double>(moves.size(), 0.0);
+
+        for (int j = 0; j < 5; j++)
+        {
+            for (int i = 0; i < moves.size(); i++)
+            {
+                Simulator simulator(m_State, moves[i]);
+                scores[i] += simulate(simulator.GenerateNewState(moves[i]), c_Depth);
+            }
+        }
+
+        auto largest = std::max_element(scores.begin(), scores.end());
+        int index = std::distance(scores.begin(), largest);
+        return moves[index];
+    }
+
     Node* root = new Node(m_State, Action());
     
     for (int i = 0; i < c_Iterations; i++)
     {
-        /*if (i % 50 == 0)
-            std::cout << "\nIteration " << i << "/" << c_Iterations << std::endl;*/
         Node* node = root;
 
         while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
@@ -46,34 +67,17 @@ Action MCTSAI::GetAction() const
     delete root;
     return bestMove;
 }
-#include "RandomAI.h"
-double MCTSAI::simulate(const GameState& state) const
+
+double MCTSAI::simulate(const GameState& state, int depth) const
 {
-    //auto start = std::chrono::high_resolution_clock::now();
-    
-    //-------------------------------------------------------------------------------
-    //static int shallow = 0;
     int i = 0;
-    int depth = 20;
     Simulator simulator(state, Action());
     while(!simulator.GetCurrentState().IsGameOver() && i < depth)
     {
         std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
-        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), true).GetAction());
+        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), false).GetAction());
         i++;
     }
-
-    //-------------------------------------------------------------------------------
-
-    //auto stop = std::chrono::high_resolution_clock::now();
-    //auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
-    //std::cout << "Simulation performed " << i << " actions in " << duration.count() << " milliseconds." << std::endl;
-
-    //if (i < depth)
-    //{
-    //    shallow++;
-    //    std::cout << "\nShallow tree #" << shallow  << " - Depth: " << i << std::endl;
-    //}
 
     const auto& finalState = simulator.GetCurrentState();
     if (finalState.IsGameOver())
@@ -101,9 +105,6 @@ double MCTSAI::getEvaluation(User player, const GameState& state) const
     }
 
     return (playerKingHealthPool - enemyKingHealthPool) / 100.0;
-    //if (diff > 0) return 1;
-    //if (diff < 0) return -1;
-    //return 0;
 }
 
 void MCTSAI::backpropagate(Node* node, double result) const
@@ -136,5 +137,5 @@ Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
 
 void MCTSAI::simAndBackprop(Node* node) const
 {
-    safeBackpropagate(node, simulate(node->GetState()));
+    safeBackpropagate(node, simulate(node->GetState(), c_Depth));
 }

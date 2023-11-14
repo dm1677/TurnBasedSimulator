@@ -8,14 +8,17 @@ class MCTSAI :
     public AI
 {
 public:
-    MCTSAI(const GameState& state)
-        : m_State(state) {}
+    MCTSAI(const GameState& state, bool treeSearch = true)
+        : m_State(state), m_TreeSearch(treeSearch) {}
     Action GetAction() const override;
     static Action GetRandomAction(const std::vector<Action>& actions);
 private:
     GameState m_State;
+    bool m_TreeSearch;
+
     class Node;
-    double simulate(const GameState& state) const;
+
+    double simulate(const GameState& state, int depth) const;
     void backpropagate(Node* node, double result) const;
     void safeBackpropagate(Node* node, double result) const;
     void simAndBackprop(Node* node) const;
