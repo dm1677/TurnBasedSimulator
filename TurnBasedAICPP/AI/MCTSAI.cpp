@@ -19,6 +19,8 @@ Action MCTSAI::GetAction() const
         auto moves = m_State.GetLegalMoves();
         auto scores = std::vector<double>(moves.size(), 0.0);
 
+        //int its = (m_UseHeuristic) ? 5 : 10;
+
         for (int j = 0; j < 5; j++)
         {
             for (int i = 0; i < moves.size(); i++)

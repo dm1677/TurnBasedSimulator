@@ -81,8 +81,7 @@ std::vector<Unit> Serialiser::ReadUnitsFromBinaryFile(const std::string& filenam
 
 void Serialiser::WriteReplayToFile(const std::vector<Action>& actions, const std::string& filename) const
 {
-	std::ofstream file;
-	file.open(filename);
+	std::ofstream file(filename);
 
 	unsigned char owner = 1;
 	for (const Action& action : actions)
@@ -97,11 +96,10 @@ void Serialiser::WriteReplayToFile(const std::vector<Action>& actions, const std
 
 std::vector<Action> Serialiser::ReadReplayFile(const std::string& filename) const
 {
-	std::ifstream file;
+	std::ifstream file(filename);
 	std::string line;
 	std::vector<Action> actions;
 	std::vector<std::string> actionData;
-	file.open(filename);
 	
 	while (getline(file, line))
 	{
