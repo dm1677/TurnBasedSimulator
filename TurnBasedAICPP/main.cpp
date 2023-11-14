@@ -157,11 +157,11 @@ void getBestMove(const Match& match, Action& bestAction, bool& actionReady) {
 
 	if (i % 2 == 0) {
 		//std::cout << "Getting player 1's move..." << std::endl;
-		action = RandomAI(match.GetCurrentGameState(), false).GetAction();
+		action = MCTSAI(match.GetCurrentGameState(), false, true).GetAction();
 	}
 	else {
 		//std::cout << "Getting player 2's move..." << std::endl;
-		action = MCTSAI(match.GetCurrentGameState(), false).GetAction();
+		action = MCTSAI(match.GetCurrentGameState(), false, false).GetAction();
 	}
 
 	std::lock_guard<std::mutex> lock(mu);

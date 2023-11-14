@@ -24,7 +24,7 @@ Action MCTSAI::GetAction() const
             for (int i = 0; i < moves.size(); i++)
             {
                 Simulator simulator(m_State, moves[i]);
-                scores[i] += simulate(simulator.GenerateNewState(moves[i]), c_Depth);
+                scores[i] += simulate(simulator.GenerateNewState(moves[i]), c_Depth, m_UseHeuristic);
             }
         }
 
@@ -68,14 +68,14 @@ Action MCTSAI::GetAction() const
     return bestMove;
 }
 
-double MCTSAI::simulate(const GameState& state, int depth) const
+double MCTSAI::simulate(const GameState& state, int depth, bool useHeuristic) const
 {
     int i = 0;
     Simulator simulator(state, Action());
     while(!simulator.GetCurrentState().IsGameOver() && i < depth)
     {
         std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
-        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), false).GetAction());
+        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), useHeuristic).GetAction());
         i++;
     }
 
