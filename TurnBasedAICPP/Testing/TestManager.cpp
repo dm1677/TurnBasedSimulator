@@ -1,35 +1,6 @@
 #include "TestManager.h"
 #include "Test.h"
 
-typedef bool (TestManager::* TestFunction)() const;
-
-//void TestManager::RunTests() const
-//{
-//	const int attempts = 10;
-//	int successes = 0;
-//
-//	std::vector<TestFunction> tests;
-//	tests.push_back(&TestManager::knight_escape);
-//	tests.push_back(&TestManager::knight_OHK);
-//	tests.push_back(&TestManager::knight_corner);
-//	tests.push_back(&TestManager::king_fork);
-//	tests.push_back(&TestManager::weighted_king_fork);
-//	tests.push_back(&TestManager::gobbo_OHK);
-//
-//	for (const auto& test : tests)
-//	{
-//		for (int i = 0; i < attempts; i++)
-//		{
-//			if ((this->*test)())
-//				successes++;
-//			else
-//				std::cout << "Test failed." << std::endl;
-//		}
-//	}
-//
-//	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 100 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
-//}
-
 void TestManager::RunTests() const
 {
 	std::vector<Unit> units;
