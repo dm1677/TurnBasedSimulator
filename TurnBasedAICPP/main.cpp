@@ -176,7 +176,7 @@ void updateUI(WindowRenderer& renderer, const Match& match) {
 	renderer.OnFrame();
 }
 
-void mtSim() {
+User mtSim() {
 	WindowRenderer renderer;
 	Match match;
 	Action bestAction;
@@ -209,7 +209,9 @@ void mtSim() {
 	}
 
 	std::cout << "End of game." << std::endl;
-	match.CreateReplayFile("output\\test\\replay.tbr");
+	//match.CreateReplayFile("output\\test\\replay.tbr");
+
+	return match.GetWinner();
 
 	//while (true)
 	//{
@@ -233,14 +235,28 @@ void playReplay(const std::string& filename)
 	}
 }
 
+void simAndWins(int sims)
+{
+	int wins[] = { 0, 0 };
+
+	std::cout << "Simulating " << sims << " games..." << std::endl;
+
+	for (int i = 0; i < sims; i++)
+		wins[(int)mtSim()]++;
+
+	std::cout << "Finished simulating." << std::endl;
+	std::cout << "Player 1 wins: " << wins[0] << " = " << ((double)wins[0] / (double)sims) * 100.0 << "% winrate. " << std::endl;
+	std::cout << "Player 2 wins: " << wins[1] << " = " << ((double)wins[1] / (double)sims) * 100.0 << "% winrate. " << std::endl;
+}
+
 int main()
 {
-	//TestManager test;
-	//test.RunTests();
+	TestManager test;
+	test.RunTests();
 
-	mtSim();
+	//simAndWins(50);
 	
-	playReplay("output\\test\\replay.tbr");	
+	//playReplay("output\\test\\replay.tbr");	
 	//simulateFull(100);
 
 	std::cout << "\n\nDone.";

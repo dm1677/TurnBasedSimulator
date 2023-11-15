@@ -1,15 +1,29 @@
 #include "TestManager.h"
 
+typedef bool (TestManager::* TestFunction)() const;
+
 void TestManager::RunTests() const
 {
 	const int attempts = 10;
 	int successes = 0;
-	for (int i = 0; i < attempts; i++)
+
+	std::vector<TestFunction> tests;
+	tests.push_back(&TestManager::knight_escape);
+	tests.push_back(&TestManager::knight_OHK);
+	tests.push_back(&TestManager::knight_corner);
+	tests.push_back(&TestManager::king_fork);
+	tests.push_back(&TestManager::weighted_king_fork);
+	tests.push_back(&TestManager::gobbo_OHK);
+
+	for (const auto& test : tests)
 	{
-		if (knight_escape())
-			successes++;
-		else
-			std::cout << "Test failed." << std::endl;
+		for (int i = 0; i < attempts; i++)
+		{
+			if ((this->*test)())
+				successes++;
+			else
+				std::cout << "Test failed." << std::endl;
+		}
 	}
 
 	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 100 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
@@ -28,7 +42,7 @@ bool TestManager::knight_OHK() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 
@@ -55,7 +69,7 @@ bool TestManager::knight_escape() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
@@ -77,7 +91,7 @@ bool TestManager::gobbo_OHK() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
@@ -106,7 +120,7 @@ bool TestManager::king_fork() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
@@ -134,7 +148,7 @@ bool TestManager::weighted_king_fork() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 	GridRenderer renderer(simulator.GetCurrentState());
@@ -161,7 +175,7 @@ bool TestManager::knight_corner() const
 	GameState state(units, Player);
 	Simulator simulator(state, Action());
 
-	MCTSAI AI(state);
+	MCTSAI AI(state, false, false);
 	auto action = AI.GetAction();
 	simulator.GenerateNewState(action);
 

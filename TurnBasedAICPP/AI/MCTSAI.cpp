@@ -19,13 +19,11 @@ Action MCTSAI::GetAction() const
         auto moves = m_State.GetLegalMoves();
         auto scores = std::vector<double>(moves.size(), 0.0);
 
-        //int its = (m_UseHeuristic) ? 5 : 10;
-
-        for (int j = 0; j < 5; j++)
+        for (int k = 0; k < 10; k++)
         {
             for (int i = 0; i < moves.size(); i++)
             {
-                Simulator simulator(m_State, moves[i]);
+                Simulator simulator(m_State, moves[i]);                    
                 scores[i] += simulate(simulator.GenerateNewState(moves[i]), c_Depth, m_UseHeuristic);
             }
         }
