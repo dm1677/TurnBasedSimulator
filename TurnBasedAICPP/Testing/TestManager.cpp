@@ -1,5 +1,7 @@
 #include "TestManager.h"
 #include "Test.h"
+#include "../GridRenderer.h"
+#include "../AI/MCTSAI.h"
 
 void TestManager::RunTests() const
 {
@@ -15,8 +17,8 @@ void TestManager::RunTests() const
 
 	Test test(puzzle);
 
-	const AI* ai = new MCTSAI(test.GetState(), true, false);
-	auto wrongMoves = test.Run(ai, 10);
+	const AI* ai = new MCTSAI(test.GetState(), false, true);
+	auto wrongMoves = test.Run(ai, 1000);
 	std::cout << wrongMoves.size() << std::endl;
 	delete ai;
 
