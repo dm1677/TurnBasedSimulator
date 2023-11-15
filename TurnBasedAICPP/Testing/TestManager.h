@@ -1,7 +1,7 @@
 #pragma once
-#include "GameSimulator/Simulator.h"
-#include "GridRenderer.h"
-#include "AI/MCTSAI.h"
+#include "../GameSimulator/Simulator.h"
+#include "../GridRenderer.h"
+#include "../AI/MCTSAI.h"
 
 class TestManager
 {

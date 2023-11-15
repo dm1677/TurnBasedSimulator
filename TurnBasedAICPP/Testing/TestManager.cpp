@@ -1,32 +1,56 @@
 #include "TestManager.h"
+#include "Test.h"
 
 typedef bool (TestManager::* TestFunction)() const;
 
+//void TestManager::RunTests() const
+//{
+//	const int attempts = 10;
+//	int successes = 0;
+//
+//	std::vector<TestFunction> tests;
+//	tests.push_back(&TestManager::knight_escape);
+//	tests.push_back(&TestManager::knight_OHK);
+//	tests.push_back(&TestManager::knight_corner);
+//	tests.push_back(&TestManager::king_fork);
+//	tests.push_back(&TestManager::weighted_king_fork);
+//	tests.push_back(&TestManager::gobbo_OHK);
+//
+//	for (const auto& test : tests)
+//	{
+//		for (int i = 0; i < attempts; i++)
+//		{
+//			if ((this->*test)())
+//				successes++;
+//			else
+//				std::cout << "Test failed." << std::endl;
+//		}
+//	}
+//
+//	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 100 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
+//}
+
 void TestManager::RunTests() const
 {
-	const int attempts = 10;
-	int successes = 0;
+	std::vector<Unit> units;
+	units.emplace_back(0, 0, 10, King, Player);
+	units.emplace_back(0, 14, 40, King, Enemy);
+	units.emplace_back(0, 1, Unit::GetMaxHealth(Knight), Knight, Enemy);
 
-	std::vector<TestFunction> tests;
-	tests.push_back(&TestManager::knight_escape);
-	tests.push_back(&TestManager::knight_OHK);
-	tests.push_back(&TestManager::knight_corner);
-	tests.push_back(&TestManager::king_fork);
-	tests.push_back(&TestManager::weighted_king_fork);
-	tests.push_back(&TestManager::gobbo_OHK);
+	std::vector<Action> correctActions;
+	correctActions.emplace_back(2, 2, 0);
 
-	for (const auto& test : tests)
-	{
-		for (int i = 0; i < attempts; i++)
-		{
-			if ((this->*test)())
-				successes++;
-			else
-				std::cout << "Test failed." << std::endl;
-		}
-	}
+	Puzzle puzzle(0, 0, units, correctActions);
 
-	std::cout << successes << "/" << attempts << " tests succeeded." << std::endl << 100 * (double)successes/(double)attempts << "% of tests passed." << std::endl;
+	Test test(puzzle);
+
+	const AI* ai = new MCTSAI(test.GetState(), true, false);
+	auto wrongMoves = test.Run(ai, 10);
+	std::cout << wrongMoves.size() << std::endl;
+	delete ai;
+
+	GridRenderer renderer(test.GetState());
+	renderer.DrawGrid();
 }
 
 bool TestManager::knight_OHK() const

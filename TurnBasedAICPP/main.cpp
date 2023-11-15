@@ -5,7 +5,7 @@
 #include "AI/MinimaxAI.h"
 #include "AI/MCTSAI.h"
 #include "GameSimulator/Match.h"
-#include "TestManager.h"
+#include "Testing/TestManager.h"
 #include <chrono>
 #include <ctime>
 #include <thread>
