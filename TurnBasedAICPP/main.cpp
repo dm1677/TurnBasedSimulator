@@ -25,10 +25,16 @@ void simulate(int matchCount, int movesPerMatch, bool draw = false, bool printDe
 		}
 	}
 }
-
+#include "BitBoard.h"
 int main()
 {
-	simulate(1, 10, true, true);
-	
+	BitBoard board;
+	for (int y = 0; y < 15; y++)
+	{
+		for (int x = 0; x < 15; x++)
+		{
+			if (board.IsSet(x, y)) std::cout << "error at " << x << ", " << y << std::endl;
+		}
+	}
 	system("pause>0");
 }

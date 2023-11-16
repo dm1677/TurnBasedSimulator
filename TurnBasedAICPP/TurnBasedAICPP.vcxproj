@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="AI\AI.cpp" />
     <ClCompile Include="AI\MinimaxAI.cpp" />
+    <ClCompile Include="BitBoard.cpp" />
     <ClCompile Include="GameSimulator\GameState.cpp" />
     <ClCompile Include="GridRenderer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -164,6 +165,7 @@
     <ClCompile Include="GameSimulator\Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitBoard.h" />
     <ClInclude Include="GameSimulator\Action.h" />
     <ClInclude Include="AI\AI.h" />
     <ClInclude Include="AI\MinimaxAI.h" />
