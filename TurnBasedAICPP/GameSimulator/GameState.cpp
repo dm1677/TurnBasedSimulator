@@ -237,15 +237,6 @@ bool GameState::IsInBounds(int x, int y)
 	else return true;
 }
 
-void GameState::PrintUnits() const
-{
-	for (auto &unit : m_Units)
-	{
-		unit.Print();
-		std::cout << std::endl;
-	}
-}
-
 std::array<std::array<char, GameState::c_GridSize>, GameState::c_GridSize> GameState::GetGridRepresentation() const
 {
 	std::array<std::array<char, c_GridSize>, c_GridSize> grid;

@@ -2,32 +2,6 @@
 #include <iostream>
 #include <fstream>
 
-void Serialiser::WriteUnitToFile(const Unit& unit, const std::string& filename) const
-{
-	std::ofstream file;
-	file.open(filename);
-
-	file << "Position: " << (int)unit.GetX() << ", " << (int)unit.GetY() << std::endl;
-	file << "Health: " << (int)unit.GetHealth() << std::endl;
-	file << "Unit type: " << unit.GetUnitType() << std::endl;
-	file << "Owner: " << unit.GetOwner();
-
-	file.close();
-}
-
-void Serialiser::ReadUnitFromFile(const std::string& filename) const
-{
-	std::ifstream file(filename);
-	std::string text;
-
-	while (getline(file, text))
-	{
-		std::cout << text;
-	}
-
-	file.close();
-}
-
 void Serialiser::WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const {
 	std::ofstream outFile(filename, std::ios::binary);
 

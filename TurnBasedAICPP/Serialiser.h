@@ -8,8 +8,6 @@
 class Serialiser
 {
 public:
-	void WriteUnitToFile(const Unit& unit, const std::string& filename) const;
-	void ReadUnitFromFile(const std::string& filename) const;
 	void WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const;
 	void WriteStateToFile(const GameState& state, const std::string& filename) const { WriteUnitsToBinaryFile(state.GetUnitData(), filename); }
 	std::vector<Unit> ReadUnitsFromBinaryFile(const std::string& filename) const;

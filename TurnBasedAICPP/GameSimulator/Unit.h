@@ -37,8 +37,6 @@ public:
 	int GetRange() const { return GetRange((UnitType)m_UnitType); }
 	bool IsMoveAttacker() const { return IsMoveAttacker((UnitType)m_UnitType); }
 	char GetCharRepresentation() const { return GetCharRepresentation((UnitType)m_UnitType); }
-
-	void Print() const;
 private:
 	unsigned char m_X : 4;
 	unsigned char m_Y : 4;

@@ -12,13 +12,6 @@ bool Unit::TakeDamage(unsigned char damage)
 	return true;
 }
 
-void Unit::Print() const {
-	std::cout << "Position: " << (int)m_X << ", " << (int)m_Y << std::endl;
-	std::cout << "Health: " << (int)m_Health << std::endl;
-	std::cout << "Unit type: " << (UnitType)m_UnitType << std::endl;
-	std::cout << "Owner: " << (User)m_Owner << std::endl;
-}
-
 bool Unit::IsMoveAttacker(UnitType unitType)
 {
 	switch (unitType) {
