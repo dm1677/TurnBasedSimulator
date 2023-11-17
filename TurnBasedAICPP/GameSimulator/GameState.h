@@ -10,7 +10,7 @@
 struct GameState {
 public:
 	GameState() {
-		createUnits();
+		initDefaultState();
 		m_PlayerToMove = Player;
 	};
 	explicit GameState(const std::vector<Unit>& units, User player) : m_Units(units), m_PlayerToMove(player) {};
@@ -47,7 +47,7 @@ private:
 	User m_PlayerToMove;
 
 
-	void createUnits();
+	void initDefaultState();
 	std::array<Vec2, 8> getDirectionVectors(Direction direction) const;
 	void addLegalCreateActions(std::vector<Action>& moves) const;
 	void addLegalMoveActions(std::vector<Action>& moves, const Unit& unit, uint32_t unitIndex) const;

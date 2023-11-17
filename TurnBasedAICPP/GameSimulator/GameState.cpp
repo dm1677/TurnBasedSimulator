@@ -10,6 +10,7 @@ bool GameState::IsPassable(int x, int y) const
 
 bool GameState::IsGameOver() const
 {
+	//Kings, if they are alive, are always at positions 2-5 in m_Units (P1 King, P1 King, P2 King, P2 King), allowing for this efficient game over check.
 	if (m_Units.size() > 4 && m_Units[4].GetUnitType() == King) { return false; }
 	if (m_Units.size() > 3 && m_Units[3].GetUnitType() != King) { return true; }
 	if (m_Units.size() > 3 && m_Units[2].GetOwner() != m_Units[3].GetOwner()) { return false; }
@@ -19,12 +20,14 @@ bool GameState::IsGameOver() const
 
 int GameState::GetResult() const
 {
+	//The losing player has no kings present in m_Units, and the winning player has at least one.
 	if (IsGameOver())
 		return m_Units[2].GetOwner();
 
 	return -1;
 }
 
+//Return the player who does NOT make a move this turn
 User GameState::GetEnemy() const {
 	if (m_PlayerToMove == Player) { return Enemy; }
 	if (m_PlayerToMove == Enemy) { return Player; }
@@ -215,6 +218,7 @@ std::vector<int> GameState::GetAttacks(const Unit &unit) const {
 std::array<Unit, 4> GameState::GetKings() const
 {
 	std::array<Unit, 4> kings = { { m_Units[2], m_Units[3], m_Units[4], m_Units[5]} };
+
 	for (int i = 0; i < kings.size(); i++)
 		if (kings[i].GetUnitType() != King)
 			kings[i] = Unit(15, 15, 0, 0, Neutral);
@@ -273,7 +277,7 @@ const Unit& GameState::GetUnit(int index) const
 	return m_Units[index];
 }
 
-void GameState::createUnits()
+void GameState::initDefaultState()
 {
 	m_Units.emplace_back(15, 15, 8, Resource, Player);
 	m_Units.emplace_back(15, 15, 8, Resource, Enemy);
