@@ -4,13 +4,12 @@
 struct Unit
 {
 public:
-	Unit(unsigned char x, unsigned char y, unsigned char health, unsigned char unit_type, unsigned char owner) 
-		: m_X(x), m_Y(y), m_Health(health), m_UnitType(unit_type), m_Owner(owner) {}
+	Unit(unsigned char x, unsigned char y, unsigned char health, unsigned char unitType, unsigned char owner) 
+		: m_X(x), m_Y(y), m_Health(health), m_UnitType(unitType), m_Owner(owner) {}
 
 	unsigned char GetX() const { return m_X; }
 	unsigned char GetY() const { return m_Y; }
 	unsigned char GetHealth() const { return m_Health; }
-
 	int GetUnitType() const { return m_UnitType; }
 	int GetOwner() const { return m_Owner; }
 
@@ -19,34 +18,27 @@ public:
 	void SetHealth(unsigned char newHealth) { m_Health = newHealth; }
 
 	bool TakeDamage(unsigned char damage);
-
-	Direction GetDirection() const;
-	static Direction GetDirection(UnitType unit_type);
-
-	unsigned char GetSpeed() const;
-	static unsigned char GetSpeed(UnitType unit_type);
-
-	unsigned char GetMaxHealth() const;
-	static unsigned char GetMaxHealth(UnitType unit_type);
-
-	unsigned char GetDamage() const;
-	static unsigned char GetDamage(UnitType unit_type);
-
-	unsigned char GetCost() const;
-	static unsigned char GetCost(UnitType unit_type);
-
-	int GetRange() const;
-	static int GetRange(UnitType unit_type);
-
-	bool IsMoveAttacker() const;
-	static bool IsMoveAttacker(UnitType unit_type);
-
-	char GetCharRepresentation() const;
-
-	void Print() const;
-
 	void Kill() { m_X = 15; m_Y = 15; m_Health = 0; m_Owner = Neutral; }
 
+	static Direction GetDirection(UnitType unitType);
+	static unsigned char GetSpeed(UnitType unitType);
+	static unsigned char GetMaxHealth(UnitType unitType);
+	static unsigned char GetDamage(UnitType unitType);
+	static unsigned char GetCost(UnitType unitType);
+	static int GetRange(UnitType unitType);
+	static bool IsMoveAttacker(UnitType unitType);
+	static char GetCharRepresentation(UnitType unitType);
+
+	Direction GetDirection() const { return GetDirection((UnitType)m_UnitType); }
+	unsigned char GetSpeed() const { return GetSpeed((UnitType)m_UnitType); }
+	unsigned char GetMaxHealth() const { return GetMaxHealth((UnitType)m_UnitType); }
+	unsigned char GetDamage() const { return GetDamage((UnitType)m_UnitType); }
+	unsigned char GetCost() const { return GetCost((UnitType)m_UnitType); }
+	int GetRange() const { return GetRange((UnitType)m_UnitType); }
+	bool IsMoveAttacker() const { return IsMoveAttacker((UnitType)m_UnitType); }
+	char GetCharRepresentation() const { return GetCharRepresentation((UnitType)m_UnitType); }
+
+	void Print() const;
 private:
 	unsigned char m_X : 4;
 	unsigned char m_Y : 4;
