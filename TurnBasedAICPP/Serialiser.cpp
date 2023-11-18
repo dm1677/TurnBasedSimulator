@@ -6,14 +6,84 @@ void Serialiser::WritePuzzleToFile(const Puzzle& puzzle, const std::string& file
 {
 	std::ofstream outFile(filename, std::ios::binary);
 
+	const auto& name = puzzle.GetName();
 	const auto& units = puzzle.GetState().GetUnitData();
+	const auto& correctActions = puzzle.GetCorrectActions();
+
+	size_t nameLength = name.length();
+	size_t unitsLength = units.size();
+	size_t actionsLength = correctActions.size();
+
+	outFile.write(reinterpret_cast<char*>(&nameLength), sizeof(nameLength));
+	outFile.write(reinterpret_cast<char*>(&unitsLength), sizeof(unitsLength));
+	outFile.write(reinterpret_cast<char*>(&actionsLength), sizeof(actionsLength));
+
+	outFile.write(name.c_str(), nameLength);
+
 	for (const auto& unit : units)
 	{
 		auto data = unit.ToBinary();
 		outFile.write(reinterpret_cast<char*>(&data), sizeof(data));
 	}
 
+	for (const auto& action : correctActions)
+	{
+		auto data = action.ToBinary();
+		outFile.write(reinterpret_cast<char*>(&data), sizeof(data));
+	}
+
 	outFile.close();
+}
+
+Puzzle Serialiser::ReadPuzzleFromFile(const std::string& filename) const
+{
+	//return Puzzle(1, 1, std::vector<Unit>(), std::vector<Action>());
+	std::ifstream inFile(filename, std::ios::binary);
+
+	if (!inFile.is_open()) {
+		// Handle file opening error
+		std::cout << "Error opening puzzle file.";
+	}
+
+	size_t nameLength;
+	size_t unitsLength;
+	size_t actionsLength;
+
+	inFile.read(reinterpret_cast<char*>(&nameLength), sizeof(nameLength));
+	inFile.read(reinterpret_cast<char*>(&unitsLength), sizeof(unitsLength));
+	inFile.read(reinterpret_cast<char*>(&actionsLength), sizeof(actionsLength));
+
+	std::string name;
+	std::vector<Unit> units;
+	std::vector<Action> correctActions;
+
+	name.resize(nameLength);
+	units.reserve(unitsLength);
+	correctActions.reserve(actionsLength);
+
+	inFile.read(&name[0], nameLength);
+	
+	for (int i = 0; i < unitsLength; i++)
+	{
+		uint32_t packedData;
+		inFile.read(reinterpret_cast<char*>(&packedData), sizeof(packedData));
+		units.emplace_back(packedData);
+	}
+
+	for (int i = 0; i < actionsLength; i++)
+	{
+		uint32_t packedData;
+		inFile.read(reinterpret_cast<char*>(&packedData), sizeof(packedData));
+		correctActions.emplace_back(packedData);
+	}
+
+	if (inFile.peek() != EOF)
+	{
+		std::cout << "HMM";
+	}
+
+	inFile.close();
+	return Puzzle(GameState(units, Player), correctActions, name);
 }
 
 void Serialiser::WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const {

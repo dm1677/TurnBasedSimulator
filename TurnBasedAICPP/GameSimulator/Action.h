@@ -1,5 +1,6 @@
 #pragma once
 #include "../Enums.h"
+#include <cstdint>
 
 struct Action {
 
@@ -27,6 +28,10 @@ public:
 	Action(int attacker, int defender)
 		: m_X(15), m_Y(15), m_Unit1(attacker), m_Unit2(defender), m_ActionType(Attack), m_UnitType(Prawn) {};
 
+	Action(uint32_t packedData)
+		: m_X(packedData & 0x0F), m_Y((packedData >> 4) & 0x0F), m_Unit1((packedData >> 8) & 0xFF), m_Unit2((packedData >> 16) & 0xFF),
+		  m_ActionType((ActionType)((packedData >> 24) & 0x0F)), m_UnitType((UnitType)((packedData >> 28) & 0x0F)) {};
+
 	Action() = default;
 
 	bool operator==(const Action& other) const
@@ -37,6 +42,20 @@ public:
 			&& m_Unit2 == other.m_Unit2
 			&& m_ActionType == other.m_ActionType
 			&& m_UnitType == other.m_UnitType;
+	}
+
+	uint32_t ToBinary() const
+	{
+		uint32_t packedData = 0;
+
+		packedData |= (GetX() & 0x0F);
+		packedData |= ((GetY() & 0x0F) << 4);
+		packedData |= ((GetUnit1() & 0xFF) << 8);
+		packedData |= ((GetUnit2() & 0xFF) << 16);
+		packedData |= ((GetActionType() & 0x0F) << 24);
+		packedData |= ((GetUnitType() & 0x0F) << 28);
+
+		return packedData;
 	}
 
 private:

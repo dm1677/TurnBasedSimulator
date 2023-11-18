@@ -5,8 +5,8 @@
 struct Puzzle
 {
 public:
-	Puzzle(int player1Money, int player2Money, const std::vector<Unit>& units, const std::vector<Action>& correctActions)
-		: m_CorrectActions(correctActions)
+	Puzzle(int player1Money, int player2Money, const std::vector<Unit>& units, const std::vector<Action>& correctActions, const std::string& name = "Puzzle")
+		: m_CorrectActions(correctActions), m_Name(name)
 	{
 		auto initialUnits = std::vector<Unit>();
 		initialUnits.reserve(2 + units.size());
@@ -18,8 +18,8 @@ public:
 
 		m_State = GameState(initialUnits, Player);
 	}
-	Puzzle (const GameState& state, const std::vector<Action>& correctActions)
-		: m_State(state), m_CorrectActions(correctActions) {}
+	Puzzle (const GameState& state, const std::vector<Action>& correctActions, const std::string& name = "Puzzle")
+		: m_State(state), m_CorrectActions(correctActions), m_Name(name) {}
 
 	bool IsCorrectAction(const Action& action) const
 	{ 
@@ -31,9 +31,11 @@ public:
 
 	const GameState& GetState() const { return m_State; }
 	const std::vector<Action>& GetCorrectActions() const { return m_CorrectActions; }
+	const std::string& GetName() const { return m_Name; }
 private:
 	GameState m_State;
 	std::vector<Action> m_CorrectActions;
+	std::string m_Name;
 };
 
 class Test
