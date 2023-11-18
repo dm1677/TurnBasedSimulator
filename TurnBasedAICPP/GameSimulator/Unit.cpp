@@ -171,3 +171,16 @@ int Unit::GetRange(UnitType unitType)
 		return 0;
 	}
 }
+
+uint32_t Unit::ToBinary() const
+{
+	uint32_t packedData = 0;
+
+	packedData |= (GetX() & 0x0F);
+	packedData |= ((GetY() & 0x0F) << 4);
+	packedData |= ((GetHealth() & 0xFF) << 8);
+	packedData |= ((GetUnitType() & 0x07) << 16);
+	packedData |= ((GetOwner() & 0x03) << 19);
+
+	return packedData;
+}

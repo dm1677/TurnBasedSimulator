@@ -2,12 +2,14 @@
 #include "GameSimulator/Unit.h"
 #include "GameSimulator/Action.h"
 #include "GameSimulator/GameState.h"
+#include "Testing/Test.h"
 #include <string>
 #include <vector>
 
 class Serialiser
 {
 public:
+	void WritePuzzleToFile(const Puzzle& puzzle, const std::string& filename) const;
 	void WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const;
 	void WriteStateToFile(const GameState& state, const std::string& filename) const { WriteUnitsToBinaryFile(state.GetUnitData(), filename); }
 	std::vector<Unit> ReadUnitsFromBinaryFile(const std::string& filename) const;

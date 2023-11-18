@@ -1,11 +1,15 @@
 #pragma once
 #include "../Enums.h"
+#include <cstdint>
 
 struct Unit
 {
 public:
 	Unit(unsigned char x, unsigned char y, unsigned char health, unsigned char unitType, unsigned char owner) 
 		: m_X(x), m_Y(y), m_Health(health), m_UnitType(unitType), m_Owner(owner) {}
+
+	explicit Unit(uint32_t packedData)
+		: m_X(packedData & 0xFF), m_Y((packedData >> 4) & 0x0F), m_Health((packedData >> 8) & 0xFF), m_UnitType((packedData >> 16) & 0x07), m_Owner((packedData >> 19) & 0x03) {}
 
 	unsigned char GetX() const { return m_X; }
 	unsigned char GetY() const { return m_Y; }
@@ -37,6 +41,8 @@ public:
 	int GetRange() const { return GetRange((UnitType)m_UnitType); }
 	bool IsMoveAttacker() const { return IsMoveAttacker((UnitType)m_UnitType); }
 	char GetCharRepresentation() const { return GetCharRepresentation((UnitType)m_UnitType); }
+
+	uint32_t ToBinary() const;
 private:
 	unsigned char m_X : 4;
 	unsigned char m_Y : 4;

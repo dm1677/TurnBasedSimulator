@@ -30,6 +30,7 @@ public:
 	}
 
 	const GameState& GetState() const { return m_State; }
+	const std::vector<Action>& GetCorrectActions() const { return m_CorrectActions; }
 private:
 	GameState m_State;
 	std::vector<Action> m_CorrectActions;
