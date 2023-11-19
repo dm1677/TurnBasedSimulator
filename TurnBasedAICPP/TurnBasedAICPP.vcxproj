@@ -171,6 +171,7 @@
     <ClCompile Include="Serialiser.cpp" />
     <ClCompile Include="GameSimulator\Simulator.cpp" />
     <ClCompile Include="GameSimulator\Unit.cpp" />
+    <ClCompile Include="Testing\Test.cpp" />
     <ClCompile Include="Testing\TestManager.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WindowRenderer.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="AI\RulesAI.h" />
     <ClInclude Include="GridRenderer.h" />
     <ClInclude Include="AI\MCTSAI.h" />
+    <ClInclude Include="Puzzle.h" />
     <ClInclude Include="Serialiser.h" />
     <ClInclude Include="GameSimulator\Simulator.h" />
     <ClInclude Include="GameSimulator\Unit.h" />

@@ -1,6 +1,6 @@
 #include "Test.h"
 
-std::vector<Action> Test::Run(const AI* ai, int attempts = 1, bool cumulative = false)
+void Test::Run(const AI* ai, int attempts, bool cumulative)
 {
 	if (!cumulative)
 	{
@@ -8,28 +8,29 @@ std::vector<Action> Test::Run(const AI* ai, int attempts = 1, bool cumulative = 
 		m_Attempts = 0;
 		m_Duration = 0;
 	}
-	auto failedActions = std::vector<Action>();
-
-	auto start = std::chrono::high_resolution_clock::now();
+	
 	for (int i = 0; i < attempts; i++)
-	{
-		m_Attempts++;
-		auto action = ai->GetAction();
-		if (m_Puzzle.IsCorrectAction(action))
-			m_Successes++;
-		else
-			failedActions.push_back(action);
-	}
-	auto end = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-	m_Duration += duration.count();
-
-	return failedActions;
+		run(ai);
 }
 
 void Test::PrintInfo() const
 {
 	std::cout << m_Successes << "/" << m_Attempts << " tests succeeded." << std::endl
 		<< 100 * (double)m_Successes / (double)m_Attempts << "% of tests passed." << std::endl
-		<< m_Duration << " microseconds taken." << std::endl;
+		<< "Completed in " << m_Duration << "ms. Average: " << (double)m_Duration / (double)m_Attempts << "ms per test." << std::endl;
+}
+
+void Test::run(const AI* ai)
+{
+	auto start = std::chrono::high_resolution_clock::now();
+
+	m_Attempts++;
+	if (auto action = ai->GetAction(); m_Puzzle.IsCorrectAction(action))
+		m_Successes++;
+	else
+		m_WrongMoves.push_back(action);
+
+	auto end = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+	m_Duration += duration.count();
 }
