@@ -9,9 +9,6 @@
 
 std::mutex nodeMutex;
 
-static const int c_Iterations = 2500;
-static const int c_Depth = 20;
-
 Action MCTSAI::GetAction() const
 {
     if (!m_TreeSearch)
@@ -19,12 +16,12 @@ Action MCTSAI::GetAction() const
         auto moves = m_State.GetLegalMoves();
         auto scores = std::vector<double>(moves.size(), 0.0);
 
-        for (int k = 0; k < 10; k++)
+        for (int k = 0; k < m_Iterations; k++)
         {
             for (int i = 0; i < moves.size(); i++)
             {
                 Simulator simulator(m_State, moves[i]);                    
-                scores[i] += simulate(simulator.GenerateNewState(moves[i]), c_Depth, m_UseHeuristic);
+                scores[i] += simulate(simulator.GenerateNewState(moves[i]), m_Depth, m_UseHeuristic);
             }
         }
 
@@ -35,7 +32,7 @@ Action MCTSAI::GetAction() const
 
     Node* root = new Node(m_State, Action());
     
-    for (int i = 0; i < c_Iterations; i++)
+    for (int i = 0; i < m_Iterations; i++)
     {
         Node* node = root;
 
@@ -137,5 +134,5 @@ Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
 
 void MCTSAI::simAndBackprop(Node* node) const
 {
-    safeBackpropagate(node, simulate(node->GetState(), c_Depth));
+    safeBackpropagate(node, simulate(node->GetState(), m_Depth));
 }

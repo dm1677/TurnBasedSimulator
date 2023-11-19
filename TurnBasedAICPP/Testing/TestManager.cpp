@@ -15,7 +15,7 @@ void TestManager::RunTests() const
 
 		std::cout << "Running test: " << puzzle.GetName() << " " << num << " times." << std::endl;
 
-		const AI* ai = new MCTSAI(test.GetState(), false, true);
+		const AI* ai = new MCTSAI(test.GetState(), false, true, 100, 20);
 		auto wrongMoves = test.Run(ai, num);
 		delete ai;
 	}
