@@ -249,31 +249,16 @@ void simAndWins(int sims)
 	std::cout << "Player 2 wins: " << wins[1] << " = " << ((double)wins[1] / (double)sims) * 100.0 << "% winrate. " << std::endl;
 }
 #include "Testing/Test.h"
-#include "Serialiser.h"
+
 int main()
 {
-	/*TestManager test;
-	test.RunTests();*/
+	TestManager test;
+	test.RunTests();
 
 	//simAndWins(50);
 	
 	//playReplay("output\\test\\replay.tbr");	
 	//simulateFull(100);
-
-
-	GameState state;
-	std::vector<Action> actions;
-	actions.emplace_back(Create, -1, -1, 6, 1, Gobbo);
-	Puzzle p(state, actions, "asdfasdfasdfasdfzzzzzzz");
-
-	Serialiser s;
-	s.WritePuzzleToFile(p, "output\\testpuzzle.p");
-	auto readPuzzle = s.ReadPuzzleFromFile("output\\testpuzzle.p");
-
-	std::cout << readPuzzle.GetName() << std::endl;
-	std::cout << readPuzzle.GetCorrectActions().size() << std::endl;
-	std::cout << readPuzzle.GetState().GetUnitData().size() << std::endl;
-
 
 	std::cout << "\n\nDone.";
 	system("pause>0");

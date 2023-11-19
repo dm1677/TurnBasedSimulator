@@ -1,6 +1,7 @@
 #include "Serialiser.h"
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 
 void Serialiser::WritePuzzleToFile(const Puzzle& puzzle, const std::string& filename) const
 {
@@ -84,6 +85,19 @@ Puzzle Serialiser::ReadPuzzleFromFile(const std::string& filename) const
 
 	inFile.close();
 	return Puzzle(GameState(units, Player), correctActions, name);
+}
+
+std::vector<Puzzle> Serialiser::GetPuzzlesFromDirectory(const std::string& directoryPath) const
+{
+	std::vector<Puzzle> puzzles;
+
+	for (const auto& entry : std::filesystem::directory_iterator(directoryPath)) {
+		if (entry.is_regular_file() && entry.path().extension() == ".tbp") {
+			Puzzle puzzle = ReadPuzzleFromFile(entry.path().string());
+			puzzles.push_back(puzzle);
+		}
+	}
+	return puzzles;
 }
 
 void Serialiser::WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const {

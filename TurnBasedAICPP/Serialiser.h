@@ -11,6 +11,7 @@ class Serialiser
 public:
 	void WritePuzzleToFile(const Puzzle& puzzle, const std::string& filename) const;
 	Puzzle ReadPuzzleFromFile(const std::string& filename) const;
+	std::vector<Puzzle> GetPuzzlesFromDirectory(const std::string& directoryPath) const;
 	void WriteUnitsToBinaryFile(const std::vector<Unit>& units, const std::string& filename) const;
 	void WriteStateToFile(const GameState& state, const std::string& filename) const { WriteUnitsToBinaryFile(state.GetUnitData(), filename); }
 	std::vector<Unit> ReadUnitsFromBinaryFile(const std::string& filename) const;
