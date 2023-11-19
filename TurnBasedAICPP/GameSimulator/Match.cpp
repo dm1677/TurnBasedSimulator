@@ -1,6 +1,6 @@
 #include "Match.h"
 #include "../Serialiser.h"
-#include "../GridRenderer.h"
+#include "../Rendering/GridRenderer.h"
 
 void Match::UpdateState(const Action& action)
 {

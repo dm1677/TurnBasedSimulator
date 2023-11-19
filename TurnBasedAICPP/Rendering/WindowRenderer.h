@@ -1,6 +1,6 @@
 #pragma once
 #include "Window.h"
-#include "GameSimulator/GameState.h"
+#include "../GameSimulator/GameState.h"
 
 class WindowRenderer
 {

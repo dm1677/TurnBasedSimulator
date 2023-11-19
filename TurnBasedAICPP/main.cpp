@@ -13,8 +13,8 @@
 #include <condition_variable>
 #include <sstream>
 
-#include "GridRenderer.h"
-#include "WindowRenderer.h"
+#include "Rendering/GridRenderer.h"
+#include "Rendering/WindowRenderer.h"
 
 std::condition_variable cv;
 std::mutex mu;

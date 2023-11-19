@@ -162,7 +162,7 @@
     <ClCompile Include="AI\AI.cpp" />
     <ClCompile Include="AI\MinimaxAI.cpp" />
     <ClCompile Include="GameSimulator\GameState.cpp" />
-    <ClCompile Include="GridRenderer.cpp" />
+    <ClCompile Include="Rendering\GridRenderer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameSimulator\Match.cpp" />
     <ClCompile Include="AI\RandomAI.cpp" />
@@ -173,8 +173,8 @@
     <ClCompile Include="GameSimulator\Unit.cpp" />
     <ClCompile Include="Testing\Test.cpp" />
     <ClCompile Include="Testing\TestManager.cpp" />
-    <ClCompile Include="Window.cpp" />
-    <ClCompile Include="WindowRenderer.cpp" />
+    <ClCompile Include="Rendering\Window.cpp" />
+    <ClCompile Include="Rendering\WindowRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameSimulator\Action.h" />
@@ -185,7 +185,7 @@
     <ClInclude Include="GameSimulator\Match.h" />
     <ClInclude Include="AI\RandomAI.h" />
     <ClInclude Include="AI\RulesAI.h" />
-    <ClInclude Include="GridRenderer.h" />
+    <ClInclude Include="Rendering\GridRenderer.h" />
     <ClInclude Include="AI\MCTSAI.h" />
     <ClInclude Include="Puzzle.h" />
     <ClInclude Include="Serialiser.h" />
@@ -193,8 +193,8 @@
     <ClInclude Include="GameSimulator\Unit.h" />
     <ClInclude Include="Testing\Test.h" />
     <ClInclude Include="Testing\TestManager.h" />
-    <ClInclude Include="Window.h" />
-    <ClInclude Include="WindowRenderer.h" />
+    <ClInclude Include="Rendering\Window.h" />
+    <ClInclude Include="Rendering\WindowRenderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

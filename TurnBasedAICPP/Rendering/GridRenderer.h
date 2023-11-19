@@ -1,8 +1,8 @@
 #pragma once
 #include <array>
 #include <Windows.h>
-#include "GameSimulator/Unit.h"
-#include "GameSimulator/GameState.h"
+#include "../GameSimulator/Unit.h"
+#include "../GameSimulator/GameState.h"
 
 class GridRenderer
 {
