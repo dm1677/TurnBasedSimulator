@@ -23,7 +23,7 @@
     <ProjectGuid>{7F9CA63F-A246-4969-8DA5-56094AC80C29}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>TurnBasedAICPP</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.20348.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -42,7 +42,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="AI\AI.cpp" />
     <ClCompile Include="AI\MinimaxAI.cpp" />
+    <ClCompile Include="BitBoard.cpp" />
     <ClCompile Include="GameSimulator\GameState.cpp" />
     <ClCompile Include="Rendering\GridRenderer.cpp" />
     <ClCompile Include="main.cpp" />
@@ -177,6 +178,7 @@
     <ClCompile Include="Rendering\WindowRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BitBoard.h" />
     <ClInclude Include="GameSimulator\Action.h" />
     <ClInclude Include="AI\AI.h" />
     <ClInclude Include="AI\MinimaxAI.h" />
