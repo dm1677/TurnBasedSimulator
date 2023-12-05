@@ -1,9 +1,11 @@
 #pragma once
 #include "../GameSimulator/Action.h"
 
-class AI
+namespace TurnBasedSimulator
 {
-public:
-	virtual Action GetAction() const = 0;
-};
-
+	class AI
+	{
+	public:
+		virtual Action GetAction() const = 0;
+	};
+}

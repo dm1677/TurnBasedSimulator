@@ -9,130 +9,133 @@
 
 std::mutex nodeMutex;
 
-Action MCTSAI::GetAction() const
+namespace TurnBasedSimulator
 {
-    if (!m_TreeSearch)
+    Action MCTSAI::GetAction() const
     {
-        auto moves = m_State.GetLegalMoves();
-        auto scores = std::vector<double>(moves.size(), 0.0);
-
-        for (int k = 0; k < m_Iterations; k++)
+        if (!m_TreeSearch)
         {
-            for (int i = 0; i < moves.size(); i++)
+            auto moves = m_State.GetLegalMoves();
+            auto scores = std::vector<double>(moves.size(), 0.0);
+
+            for (int k = 0; k < m_Iterations; k++)
             {
-                Simulator simulator(m_State, moves[i]);                    
-                scores[i] += simulate(simulator.GenerateNewState(moves[i]), m_Depth, m_UseHeuristic);
+                for (int i = 0; i < moves.size(); i++)
+                {
+                    Simulator simulator(m_State, moves[i]);
+                    scores[i] += simulate(simulator.GenerateNewState(moves[i]), m_Depth, m_UseHeuristic);
+                }
             }
+
+            auto largest = std::max_element(scores.begin(), scores.end());
+            int index = std::distance(scores.begin(), largest);
+            return moves[index];
         }
 
-        auto largest = std::max_element(scores.begin(), scores.end());
-        int index = std::distance(scores.begin(), largest);
-        return moves[index];
-    }
+        Node* root = new Node(m_State, Action());
 
-    Node* root = new Node(m_State, Action());
-    
-    for (int i = 0; i < m_Iterations; i++)
-    {
-        Node* node = root;
-
-        while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
+        for (int i = 0; i < m_Iterations; i++)
         {
-            if (m_State.GetPlayer() == node->GetState().GetPlayer())
-                node = node->GetBestChild(sqrt(2));
-            else
-                node = node->GetWorstChild(sqrt(2));
+            Node* node = root;
+
+            while (node->IsFullyExpanded() && !node->GetState().IsGameOver())
+            {
+                if (m_State.GetPlayer() == node->GetState().GetPlayer())
+                    node = node->GetBestChild(sqrt(2));
+                else
+                    node = node->GetWorstChild(sqrt(2));
+            }
+
+            if (!node->IsFullyExpanded() && !node->GetState().IsGameOver())
+            {
+                node = node->Expand();
+            }
+
+            std::vector<std::thread> threads;
+            for (int j = 0; j < std::thread::hardware_concurrency(); j++)
+                threads.emplace_back(&MCTSAI::simAndBackprop, this, node);
+
+            for (auto& thread : threads)
+                thread.join();
         }
 
-        if (!node->IsFullyExpanded() && !node->GetState().IsGameOver())
+        const Node* bestNode = root->GetBestChild(0.0);
+        Action bestMove = bestNode->GetAction();
+        //std::cout << "Cumulative evaluation: " << root->GetWins() << std::endl;
+        //std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << "/" << root->GetVisits() << " visits." << std::endl;
+        delete root;
+        return bestMove;
+    }
+
+    double MCTSAI::simulate(const GameState& state, int depth, bool useHeuristic) const
+    {
+        int i = 0;
+        Simulator simulator(state, Action());
+        while (!simulator.GetCurrentState().IsGameOver() && i < depth)
         {
-            node = node->Expand();
+            std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
+            simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), useHeuristic).GetAction());
+            i++;
         }
 
-        std::vector<std::thread> threads;
-        for (int j = 0; j < std::thread::hardware_concurrency(); j++)
-            threads.emplace_back(&MCTSAI::simAndBackprop, this, node);
-
-        for (auto& thread : threads)
-            thread.join();
+        const auto& finalState = simulator.GetCurrentState();
+        if (finalState.IsGameOver())
+        {
+            if (m_State.GetPlayer() == finalState.GetResult())
+                return 1;
+            else return 0;
+        }
+        else
+            return getEvaluation(m_State.GetPlayer(), finalState);
     }
 
-    const Node* bestNode = root->GetBestChild(0.0);
-    Action bestMove = bestNode->GetAction();
-    //std::cout << "Cumulative evaluation: " << root->GetWins() << std::endl;
-    //std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << "/" << root->GetVisits() << " visits." << std::endl;
-    delete root;
-    return bestMove;
-}
-
-double MCTSAI::simulate(const GameState& state, int depth, bool useHeuristic) const
-{
-    int i = 0;
-    Simulator simulator(state, Action());
-    while(!simulator.GetCurrentState().IsGameOver() && i < depth)
+    double MCTSAI::getEvaluation(User player, const GameState& state) const
     {
-        std::vector<Action> actions = simulator.GetCurrentState().GetLegalMoves();
-        simulator.GenerateNewState(RandomAI(simulator.GetCurrentState(), useHeuristic).GetAction());
-        i++;
+        int playerKingHealthPool = 0;
+        int enemyKingHealthPool = 0;
+        const auto& kings = state.GetKings();
+
+        for (const auto& king : kings)
+        {
+            if (king.GetOwner() == player)
+                playerKingHealthPool += king.GetHealth();
+            else if (king.GetOwner() != Neutral)
+                enemyKingHealthPool += king.GetHealth();
+        }
+
+        return ((playerKingHealthPool - enemyKingHealthPool) / 160.0) + 0.5; //TODO: Factor out magic number and make partly constexpr -> 160 = max no. kings * king max health
     }
 
-    const auto& finalState = simulator.GetCurrentState();
-    if (finalState.IsGameOver())
+    void MCTSAI::backpropagate(Node* node, double result) const
     {
-        if (m_State.GetPlayer() == finalState.GetResult())
-            return 1;
-        else return 0;
+        while (node)
+        {
+            node->IncrementVisits();
+            node->UpdateWins(result);
+            node = node->GetParent();
+        }
     }
-    else
-        return getEvaluation(m_State.GetPlayer(), finalState);
-}
 
-double MCTSAI::getEvaluation(User player, const GameState& state) const
-{
-    int playerKingHealthPool = 0;
-    int enemyKingHealthPool = 0;
-    const auto& kings = state.GetKings();
 
-    for (const auto& king : kings)
+    void MCTSAI::safeBackpropagate(Node* node, double result) const
     {
-        if (king.GetOwner() == player)
-            playerKingHealthPool += king.GetHealth();
-        else if (king.GetOwner() != Neutral)
-            enemyKingHealthPool += king.GetHealth();
+        std::lock_guard<std::mutex> lock(nodeMutex);
+        backpropagate(node, result);
     }
 
-    return ((playerKingHealthPool - enemyKingHealthPool) / 160.0) + 0.5; //TODO: Factor out magic number and make partly constexpr -> 160 = max no. kings * king max health
-}
-
-void MCTSAI::backpropagate(Node* node, double result) const
-{
-    while (node)
+    Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
     {
-        node->IncrementVisits();
-        node->UpdateWins(result);
-        node = node->GetParent();
+        if (actions.empty()) return Action();
+
+        std::mt19937 rng(std::random_device{}());
+        std::uniform_int_distribution<int> dist(0, actions.size() - 1);
+
+        int randomNumber = dist(rng);
+        return actions[randomNumber];
     }
-}
 
-
-void MCTSAI::safeBackpropagate(Node* node, double result) const
-{
-    std::lock_guard<std::mutex> lock(nodeMutex);
-    backpropagate(node, result);
-}
-
-Action MCTSAI::GetRandomAction(const std::vector<Action>& actions)
-{
-    if (actions.empty()) return Action();
-
-    std::mt19937 rng(std::random_device{}());
-    std::uniform_int_distribution<int> dist(0, actions.size() - 1);
-
-    int randomNumber = dist(rng);
-    return actions[randomNumber];
-}
-
-void MCTSAI::simAndBackprop(Node* node) const
-{
-    safeBackpropagate(node, simulate(node->GetState(), m_Depth));
+    void MCTSAI::simAndBackprop(Node* node) const
+    {
+        safeBackpropagate(node, simulate(node->GetState(), m_Depth));
+    }
 }

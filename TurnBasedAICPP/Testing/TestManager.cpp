@@ -3,21 +3,24 @@
 #include "../AI/MCTSAI.h"
 #include "../Serialiser.h"
 
-void TestManager::RunTests() const
+namespace TurnBasedSimulator
 {
-	Serialiser s;
-	const auto puzzles = s.GetPuzzlesFromDirectory("output\\test_puzzles");
-	const int num = 10;
-
-	for (const auto& puzzle : puzzles)
+	void TestManager::RunTests() const
 	{
-		Test test(puzzle, puzzle.GetName());
+		Serialiser s;
+		const auto puzzles = s.GetPuzzlesFromDirectory("output\\test_puzzles");
+		const int num = 10;
 
-		std::cout << "\nRunning test: " << puzzle.GetName() << " " << num << " times." << std::endl;
+		for (const auto& puzzle : puzzles)
+		{
+			Test test(puzzle, puzzle.GetName());
 
-		const AI* ai = new MCTSAI(test.GetState(), false, true, 10, 20);
-		test.Run(ai, num);
-		delete ai;
-		test.PrintInfo();
+			std::cout << "\nRunning test: " << puzzle.GetName() << " " << num << " times." << std::endl;
+
+			const AI* ai = new MCTSAI(test.GetState(), false, true, 10, 20);
+			test.Run(ai, num);
+			delete ai;
+			test.PrintInfo();
+		}
 	}
 }

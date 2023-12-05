@@ -1,9 +1,11 @@
 #pragma once
 #include "../GameSimulator/Simulator.h"
 
-class TestManager
+namespace TurnBasedSimulator
 {
-public:
-	void RunTests() const;
-};
-
+	class TestManager
+	{
+	public:
+		void RunTests() const;
+	};
+}
