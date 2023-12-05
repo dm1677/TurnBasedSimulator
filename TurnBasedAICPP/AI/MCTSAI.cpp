@@ -59,8 +59,8 @@ Action MCTSAI::GetAction() const
 
     const Node* bestNode = root->GetBestChild(0.0);
     Action bestMove = bestNode->GetAction();
-    std::cout << "Cumulative evaluation: " << root->GetWins() << std::endl;
-    std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << "/" << root->GetVisits() << " visits." << std::endl;
+    //std::cout << "Cumulative evaluation: " << root->GetWins() << std::endl;
+    //std::cout << "Best node: " << bestNode->GetWins() << " score, " << bestNode->GetVisits() << "/" << root->GetVisits() << " visits." << std::endl;
     delete root;
     return bestMove;
 }
@@ -80,8 +80,8 @@ double MCTSAI::simulate(const GameState& state, int depth, bool useHeuristic) co
     if (finalState.IsGameOver())
     {
         if (m_State.GetPlayer() == finalState.GetResult())
-            return 1000;
-        else return -1000;
+            return 1;
+        else return 0;
     }
     else
         return getEvaluation(m_State.GetPlayer(), finalState);
@@ -101,7 +101,7 @@ double MCTSAI::getEvaluation(User player, const GameState& state) const
             enemyKingHealthPool += king.GetHealth();
     }
 
-    return (playerKingHealthPool - enemyKingHealthPool) / 100.0;
+    return ((playerKingHealthPool - enemyKingHealthPool) / 160.0) + 0.5; //TODO: Factor out magic number and make partly constexpr -> 160 = max no. kings * king max health
 }
 
 void MCTSAI::backpropagate(Node* node, double result) const
