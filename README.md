@@ -2,6 +2,9 @@
 
 Reimplementation of Turn Based game logic in C++ for use with AI.
 
+![image](https://github.com/dm1677/TurnBasedSimulator/assets/120566668/e1bcc9bf-23c4-4d1a-9d9e-1d0c69b8da1e)
+
+
 ## Features
 
 ### AI
