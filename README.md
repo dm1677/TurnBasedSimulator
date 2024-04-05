@@ -9,11 +9,11 @@ Reimplementation of Turn Based game logic in C++ for use with AI.
 
 ### AI
 There are 5 types of AI currently implemented:
--Minimax
--Monte Carlo
--Monte Carlo Tree Search
--Random (uniform distribution)
--Random (weighted distribution)
+- Minimax
+- Monte Carlo
+- Monte Carlo Tree Search
+- Random (uniform distribution)
+- Random (weighted distribution)
 
 The Monte Carlo AIs use the Random AI for their random simulations (rollouts), and can choose which version of the Random AI to use.
 A very simple evaluation function calculates the difference between the combined health of both player's kings, normalised between 0 and 1, as a heuristic. Reducing your opponent's king's health to 0 is the victory condition, making this a very suitable heuristic.
